@@ -2,9 +2,9 @@
 Helper functions for setting up
 
  1. An AiiDA localhost computer
- 2. A "diff" code on localhost
+ 2. A "sander" code on localhost
 
-Note: Point 2 is made possible by the fact that the ``diff`` executable is
+Note: Point 2 is made possible by the fact that the ``sander`` executable is
 available in the PATH on almost any UNIX system.
 """
 import shutil
@@ -13,10 +13,11 @@ import tempfile
 from aiida.common.exceptions import NotExistent
 from aiida.orm import Code, Computer
 
-LOCALHOST_NAME = "localhost-test"
+LOCALHOST_NAME = "localhost"
 
 executables = {
-    "amber": "diff",
+    "amber": "sander",
+    "bash": "bash",
 }
 
 
@@ -53,7 +54,7 @@ def get_computer(name=LOCALHOST_NAME, workdir=None):
 
         computer = Computer(
             label=name,
-            description="localhost computer set up by aiida_diff tests",
+            description="localhost computer set up by aiida-amber plugin",
             hostname=name,
             workdir=workdir,
             transport_type="core.local",

@@ -19,8 +19,8 @@ classifiers = [
     "Development Status :: 3 - Alpha",
     "Framework :: AiiDA"
 ]
-keywords = ["aiida", "plugin"]
-requires-python = ">=3.7"
+keywords = ["aiida", "plugin", "amber", "aiida-amber"]
+requires-python = ">=3.8"
 dependencies = [
     "aiida-core>=2.0,<3",
     "voluptuous"
@@ -49,17 +49,17 @@ docs = [
     "markupsafe<2.1"
 ]
 
+[project.scripts]
+aiida_sander = "aiida_amber.cli.sander:cli"
+
 [project.entry-points."aiida.data"]
-"amber" = "aiida_amber.data:DiffParameters"
+"amber.sander" = "aiida_amber.data.sander:SanderParameters"
 
 [project.entry-points."aiida.calculations"]
-"amber" = "aiida_amber.calculations:DiffCalculation"
+"amber.sander" = "aiida_amber.calculations.sander:SanderCalculation"
 
 [project.entry-points."aiida.parsers"]
-"amber" = "aiida_amber.parsers:DiffParser"
-
-[project.entry-points."aiida.cmdline.data"]
-"amber" = "aiida_amber.cli:data_cli"
+"amber.sander" = "aiida_amber.parsers.sander:SanderParser"
 
 [tool.flit.module]
 name = "aiida_amber"
