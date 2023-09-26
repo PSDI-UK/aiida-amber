@@ -5,7 +5,7 @@ Register data types via the "aiida.data" entry point in setup.json.
 """
 # You can directly use or subclass aiida.orm.data.Data
 # or any other data type listed under 'verdi data'
-from voluptuous import Optional, Schema, Required
+from voluptuous import Optional, Required, Schema
 
 from aiida.orm import Dict
 
@@ -16,9 +16,10 @@ cmdline_options = {
     # Required("p", default="prmtop"): str,
     # Required("c", default="inpcrd"): str,
     Required("inf", default="mdinfo"): str,
-
     Optional("r"): str,
-    Optional("ref",): str,
+    Optional(
+        "ref",
+    ): str,
     Optional("mtmd"): str,
     Optional("x"): str,
     Optional("y"): str,
@@ -101,14 +102,20 @@ class SanderParameters(Dict):  # pylint: disable=too-many-ancestors
         parameters.extend(["-p", input_files["prmtop"]])
         parameters.extend(["-c", input_files["inpcrd"]])
         # optional inputs
-        if "refc" in input_files: parameters.extend(["-ref", input_files["refc"]])
-        if "mtmd" in input_files: parameters.extend(["-mtmd", input_files["mtmd"]])
-        if "inptraj" in input_files: parameters.extend(["-y", input_files["inptraj"]])
-        if "inpdip" in input_files: parameters.extend(["-idip", input_files["inpdip"]])
-        if "cpin" in input_files: parameters.extend(["-cpin", input_files["cpin"]])
-        if "cein" in input_files: parameters.extend(["-cein", input_files["cein"]])
-        if "evbin" in input_files: parameters.extend(["-evbin", input_files["evbin"]])
-
+        if "refc" in input_files:
+            parameters.extend(["-ref", input_files["refc"]])
+        if "mtmd" in input_files:
+            parameters.extend(["-mtmd", input_files["mtmd"]])
+        if "inptraj" in input_files:
+            parameters.extend(["-y", input_files["inptraj"]])
+        if "inpdip" in input_files:
+            parameters.extend(["-idip", input_files["inpdip"]])
+        if "cpin" in input_files:
+            parameters.extend(["-cpin", input_files["cpin"]])
+        if "cein" in input_files:
+            parameters.extend(["-cein", input_files["cein"]])
+        if "evbin" in input_files:
+            parameters.extend(["-evbin", input_files["evbin"]])
 
         parm_dict = self.get_dict()
 

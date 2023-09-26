@@ -4,6 +4,7 @@ Parsers provided by aiida_amber.
 This calculation configures the ability to use the 'sander' executable.
 """
 import os
+
 from aiida.common import exceptions
 from aiida.engine import ExitCode
 from aiida.orm import SinglefileData
@@ -40,29 +41,34 @@ class SanderParser(Parser):
         # Map output files to how they are named.
         outputs = ["stdout"]
         output_template = {
-                "o": "mdout",
-                "inf": "mdinfo",
-                "x": "mdcrd",
-                "v": "mdvel",
-                "frc": "mdfrc",
-                "e": "mden",
-                "r": "restrt",
-                "cprestrt": "cprestrt",
-                "cpout": "cpout",
-                "ceout": "ceout",
-                "cerestrt": "cerestrt",
-                "suffix": "suffix",
+            "o": "mdout",
+            "inf": "mdinfo",
+            "x": "mdcrd",
+            "v": "mdvel",
+            "frc": "mdfrc",
+            "e": "mden",
+            "r": "restrt",
+            "cprestrt": "cprestrt",
+            "cpout": "cpout",
+            "ceout": "ceout",
+            "cerestrt": "cerestrt",
+            "suffix": "suffix",
         }
 
-        for item in output_template:
+        # pylint: disable=unused-variable
+        for item, val in output_template.items():
             if item in self.node.inputs.parameters.keys():
-                outputs.append(output_template[item])
+                outputs.append(val)
 
         # Grab list of retrieved files.
         files_retrieved = self.retrieved.base.repository.list_object_names()
 
         # Grab list of files expected and remove the scheduler stdout and stderr files.
-        files_expected = [files for files in self.node.get_option("retrieve_list") if files not in ["_scheduler-stdout.txt", "_scheduler-stderr.txt"]]
+        files_expected = [
+            files
+            for files in self.node.get_option("retrieve_list")
+            if files not in ["_scheduler-stdout.txt", "_scheduler-stderr.txt"]
+        ]
 
         # Check if the expected files are a subset of retrieved.
         if not set(files_expected) <= set(files_retrieved):

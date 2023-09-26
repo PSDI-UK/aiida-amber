@@ -11,5 +11,11 @@ def clear_database_auto(clear_database):  # pylint: disable=unused-argument
 
 @pytest.fixture(scope="function")
 def amber_code(aiida_local_code_factory):
-    """Get a amber code."""
-    return aiida_local_code_factory(executable="diff", entry_point="amber")
+    """Get a sander code."""
+    return aiida_local_code_factory(executable="sander", entry_point="amber")
+
+
+@pytest.fixture(scope="function")
+def bash_code(aiida_local_code_factory):
+    """Get a bash code."""
+    return aiida_local_code_factory(executable="bash", entry_point="amber")

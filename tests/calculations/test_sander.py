@@ -2,20 +2,17 @@
 import os
 
 from aiida.engine import run
-from aiida.orm import SinglefileData
-from aiida import load_profile
 from aiida.plugins import CalculationFactory, DataFactory
-from aiida_amber import helpers
 
 from .. import TEST_DIR
 
 
-def run_sander():
+def run_sander(amber_code):
     """Run an instance of sander and return the results."""
 
-    profile = load_profile()
-    computer = helpers.get_computer()
-    amber_code = helpers.get_code(entry_point="amber", computer=computer)
+    # profile = load_profile()
+    # computer = helpers.get_computer()
+    # amber_code = helpers.get_code(entry_point="amber", computer=computer)
 
     # Prepare input parameters
     SanderParameters = DataFactory("amber.sander")
@@ -49,11 +46,11 @@ def run_sander():
     return result
 
 
-def test_process():
+def test_process(amber_code):
     """Test running a sander calculation.
     Note: this does not test that the expected outputs are created of output parsing"""
 
-    result = run_sander()
+    result = run_sander(amber_code)
 
     assert "stdout" in result
     assert "mdinfo" in result
@@ -61,13 +58,12 @@ def test_process():
     assert "restrt" in result
 
 
-def test_file_name_match():
+def test_file_name_match(amber_code):
     """Test that the file names returned match what was specified on inputs."""
 
-    result = run_sander()
+    result = run_sander(amber_code)
 
     assert result["stdout"].list_object_names()[0] == "sander.out"
     assert result["mdinfo"].list_object_names()[0] == "01_Min.mdinfo"
     assert result["mdout"].list_object_names()[0] == "01_Min.out"
     assert result["restrt"].list_object_names()[0] == "01_Min.ncrst"
-
