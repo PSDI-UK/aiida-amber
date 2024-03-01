@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [project.urls]
-Source = "https://github.com/jkalayan/aiida-amber"
+Source = "https://github.com/PSDI-UK/aiida-amber"
 
 [project.optional-dependencies]
 testing = [

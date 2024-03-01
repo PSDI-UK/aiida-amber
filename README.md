@@ -101,7 +101,7 @@ verdi data amber export <PK>
 ## Development
 
 ```shell
-git clone https://github.com/jkalayan/aiida-amber .
+git clone https://github.com/PSDI-UK/aiida-amber .
 cd aiida-amber
 pip install --upgrade pip
 pip install -e .[pre-commit,testing]  # install extra dependencies
@@ -119,10 +119,10 @@ MIT
 jas.kalayan@stfc.ac.uk
 
 
-[ci-badge]: https://github.com/jkalayan/aiida-amber/workflows/ci/badge.svg?branch=master
-[ci-link]: https://github.com/jkalayan/aiida-amber/actions
-[cov-badge]: https://coveralls.io/repos/github/jkalayan/aiida-amber/badge.svg?branch=master
-[cov-link]: https://coveralls.io/github/jkalayan/aiida-amber?branch=master
+[ci-badge]: https://github.com/PSDI-UK/aiida-amber/workflows/ci/badge.svg?branch=master
+[ci-link]: https://github.com/PSDI-UK/aiida-amber/actions
+[cov-badge]: https://coveralls.io/repos/github/PSDI-UK/aiida-amber/badge.svg?branch=master
+[cov-link]: https://coveralls.io/github/PSDI-UK/aiida-amber?branch=master
 [docs-badge]: https://readthedocs.org/projects/aiida-amber/badge
 [docs-link]: http://aiida-amber.readthedocs.io/
 [pypi-badge]: https://badge.fury.io/py/aiida-amber.svg
