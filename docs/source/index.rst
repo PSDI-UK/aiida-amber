@@ -1,7 +1,7 @@
 The aiida-amber plugin for `AiiDA`_
 =====================================================
 
-``aiida-amber`` is available at http://github.com/jkalayan/aiida-amber
+``aiida-amber`` is available at http://github.com/PSDI-UK/aiida-amber
 
 
 .. toctree::
