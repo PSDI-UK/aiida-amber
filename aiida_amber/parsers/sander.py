@@ -4,7 +4,7 @@ Parsers provided by aiida_amber.
 This calculation configures the ability to use the 'sander' executable.
 """
 import os
-
+from pathlib import Path
 from aiida.common import exceptions
 from aiida.engine import ExitCode
 from aiida.orm import SinglefileData
@@ -38,6 +38,8 @@ class SanderParser(Parser):
 
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
+        # the directory for storing parsed output files
+        output_dir = Path(self.node.get_option("output_dir"))
         # Map output files to how they are named.
         outputs = ["stdout"]
         output_template = {
@@ -86,6 +88,6 @@ class SanderParser(Parser):
 
         # If not in testing mode, then copy back the files.
         if "PYTEST_CURRENT_TEST" not in os.environ:
-            self.retrieved.copy_tree(os.getcwd())
+            self.retrieved.copy_tree(output_dir)
 
         return ExitCode(0)

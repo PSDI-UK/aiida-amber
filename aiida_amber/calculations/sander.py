@@ -3,6 +3,7 @@ Calculations provided by aiida_amber.
 
 Register calculations via the "aiida.calculations" entry point in setup.json.
 """
+import os
 from aiida.common import CalcInfo, datastructures
 from aiida.engine import CalcJob
 from aiida.orm import SinglefileData
@@ -45,6 +46,8 @@ class SanderCalculation(CalcJob):
         spec.input("inpcrd", valid_type=SinglefileData,
                    help="input initial coordinates and (optionally) "
                    "velocities and periodic box size.")
+        spec.input('metadata.options.output_dir', valid_type=str, default=os.getcwd(),
+                help='Directory where output files will be saved when parsed.')
 
         # optional inputs
         spec.input("refc", valid_type=SinglefileData, required=False,
