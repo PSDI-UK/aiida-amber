@@ -22,12 +22,12 @@ classifiers = [
 keywords = ["aiida", "plugin", "amber", "aiida-amber"]
 requires-python = ">=3.8"
 dependencies = [
-    "aiida-core>=2.0,<3",
+    "aiida-core>=2.4.0,<3",
     "voluptuous"
 ]
 
 [project.urls]
-Source = "https://github.com/jkalayan/aiida-amber"
+Source = "https://github.com/PSDI-UK/aiida-amber"
 
 [project.optional-dependencies]
 testing = [
@@ -73,6 +73,9 @@ disable = [
     "too-many-ancestors",
     "invalid-name",
     "duplicate-code",
+    # black compatibility
+    #"C0330",
+    #"C0326",
 ]
 
 [tool.pytest.ini_options]
@@ -80,7 +83,6 @@ disable = [
 python_files = "test_*.py example_*.py"
 filterwarnings = [
     "ignore::DeprecationWarning:aiida:",
-    "ignore:Creating AiiDA configuration folder:",
     "ignore::DeprecationWarning:plumpy:",
     "ignore::DeprecationWarning:yaml:",
 ]
@@ -101,20 +103,20 @@ known_aiida = ['aiida']
 legacy_tox_ini = """
 [tox]
 envlist = py38
-
 [testenv]
 usedevelop=True
-
-[testenv:py{37,38,39,310}]
+[testenv:py{,38,39,310,311}]
 description = Run the test suite against a python version
 extras = testing
+setenv =
+    AIIDA_WARN_v3 = 1
 commands = pytest {posargs}
-
 [testenv:pre-commit]
 description = Run the pre-commit checks
-extras = pre-commit
+extras = 
+    pre-commit
+    testing
 commands = pre-commit run {posargs}
-
 [testenv:docs]
 description = Build the documentation
 extras = docs
