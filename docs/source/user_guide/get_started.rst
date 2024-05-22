@@ -10,7 +10,7 @@ Installation
 
 Use the following commands to install the plugin::
 
-    git clone https://github.com/jkalayan/aiida-amber .
+    git clone https://github.com/PSDI-UK/aiida-amber .
     cd aiida-amber
     pip install -e .  # also installs aiida, if missing (but not postgres)
     #pip install -e .[pre-commit,testing] # install extras for more features
@@ -37,6 +37,3 @@ If you have already set up your own aiida_amber code using
 
 Available calculations
 ++++++++++++++++++++++
-
-.. aiida-calcjob:: DiffCalculation
-    :module: aiida_amber.calculations

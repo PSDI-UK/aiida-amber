@@ -5,6 +5,7 @@ This calculation configures the ability to use the 'sander' executable.
 """
 import os
 from pathlib import Path
+
 from aiida.common import exceptions
 from aiida.engine import ExitCode
 from aiida.orm import SinglefileData

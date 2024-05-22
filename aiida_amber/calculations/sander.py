@@ -4,6 +4,7 @@ Calculations provided by aiida_amber.
 Register calculations via the "aiida.calculations" entry point in setup.json.
 """
 import os
+
 from aiida.common import CalcInfo, datastructures
 from aiida.engine import CalcJob
 from aiida.orm import SinglefileData
