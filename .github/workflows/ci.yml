@@ -66,15 +66,15 @@ jobs:
     - name: Build docs
       run: cd docs && make
 
-  pre-commit:
+   pre-commit:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
       with:
-        python-version: "3.8"
+        python-version: 3.11
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
