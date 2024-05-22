@@ -126,7 +126,7 @@ html_theme_options = {
     "display_version": True,
 }
 
-# html_theme = "furo"
+html_theme = "furo"
 # html_logo = "images/AiiDA_transparent_logo.png"
 # html_title = f"aiida-amber v{release}"
 # html_theme_options = {}
