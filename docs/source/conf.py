@@ -20,7 +20,7 @@ import aiida_amber
 
 # If we are not on READTHEDOCS load the Sphinx theme manually
 if not os.environ.get("READTHEDOCS", None):
-    import sphinx_rtd_theme
+    # import sphinx_rtd_theme
 
     html_theme = "furo" # "sphinx_rtd_theme"
     # html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
@@ -66,8 +66,8 @@ master_doc = "index"
 
 # General information about the project.
 project = "aiida-amber"
-copyright_first_year = "2022"
-copyright_owners = "Jas Kalayan"
+copyright_first_year = "2024"
+copyright_owners = "Jas Kalayan, James Gebbie-Rayet"
 
 current_year = str(time.localtime().tm_year)
 copyright_year_string = (
