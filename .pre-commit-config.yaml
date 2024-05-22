@@ -1,8 +1,9 @@
 # Install pre-commit hooks via:
 # pre-commit install
+exclude: ".*.in|.*.prmtop|.*.top|.*.pdb"
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.4.0
+  rev: v4.1.0
   hooks:
     - id: end-of-file-fixer
     - id: mixed-line-ending
@@ -10,7 +11,7 @@ repos:
     - id: check-json
 
 - repo: https://github.com/asottile/pyupgrade
-  rev: v3.3.1
+  rev: v2.31.0
   hooks:
   - id: pyupgrade
     args: ["--py37-plus"]
@@ -21,7 +22,7 @@ repos:
     - id: isort
 
 - repo: https://github.com/psf/black
-  rev: 22.12.0
+  rev: 23.3.0
   hooks:
     - id: black
 
