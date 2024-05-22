@@ -14,20 +14,25 @@ import os
 import sys
 import time
 
-from aiida.manage.configuration import load_documentation_profile
-
 import aiida_amber
 
 # -- AiiDA-related setup --------------------------------------------------
 
-# Load the dummy documentation profile
-load_documentation_profile()
+# If we are not on READTHEDOCS load the Sphinx theme manually
+if not os.environ.get("READTHEDOCS", None):
+    import sphinx_rtd_theme
+
+    html_theme = "sphinx_rtd_theme"
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # -- General configuration ------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
+
+# If your documentation needs a minimal Sphinx version, state it here.
+needs_sphinx = "1.5"
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -109,10 +114,22 @@ pygments_style = "sphinx"
 
 # -- Options for HTML output ----------------------------------------------
 
-html_theme = "furo"
-html_logo = "images/AiiDA_transparent_logo.png"
-html_title = f"aiida-amber v{release}"
-html_theme_options = {}
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
+# ~ html_theme = 'basicstrap'
+## SET BELOW
+
+# Theme options are theme-specific and customize the look and feel of a theme
+# further.  For a list of options available for each theme, see the
+# documentation.
+html_theme_options = {
+    "display_version": True,
+}
+
+# html_theme = "furo"
+# html_logo = "images/AiiDA_transparent_logo.png"
+# html_title = f"aiida-amber v{release}"
+# html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
 # ~ html_theme_path = ["."]
@@ -178,6 +195,9 @@ html_use_opensearch = "https://aiida-amber.readthedocs.io"
 #   'da', 'de', 'en', 'es', 'fi', 'fr', 'hu', 'it', 'ja'
 #   'nl', 'no', 'pt', 'ro', 'ru', 'sv', 'tr'
 html_search_language = "en"
+
+# Output file base name for HTML help builder.
+htmlhelp_basename = "aiida-amber-doc"
 
 # Warnings to ignore when using the -n (nitpicky) option
 # We should ignore any python built-in exception, for instance
