@@ -39,7 +39,7 @@ class TleapInputData(SinglefileData):
         return self.base.attributes.get('output_files')
 
     @property
-    def calculation_inputs(self): # NOTE: get_calc_inputs_outputs instead?
+    def calculation_inputs_outputs(self):
         """Return the inputs for the tleap calculation job
         """
         input_files = self.inpfile_list
@@ -88,22 +88,14 @@ def add_calculation_inputs(subdirs, files):
     inputs directory
     """
     calc_inputs = {}
+    input_list = []
     # If we have tleap input files then tag them.
     if files:
         calc_inputs["tleap_inpfiles"] = {}
         # Iterate files to assemble a dict of names and paths.
         for file in files:
             if os.path.isfile(file):
-                # TODO: check for / in function before, check if its a file in a dir or an actual dir first
-                # if "/" in file:
-                #     subdir = file
-                #     file = subdir.split("/")[-1]
-                #     # Create a folder that is empty.
-                #     if subdir.split("/")[0] not in calc_inputs["tleap_inpfiles"].keys():
-                #         calc_inputs["tleap_inpfiles"][subdir.split("/")[0]] = FolderData()
-                #     # Now fill it with files referenced in the tleap inputfile.
-                #     calc_inputs["tleap_inpfiles"][subdir.split("/")[0]].put_object_from_file(
-                #         os.path.join(os.getcwd(), subdir), path=subdir.split("/")[-1])
+                input_list.append(file)
                 formatted_filename = node_utils.format_link_label(file)
                 # set correct file path for tests
                 if "PYTEST_CURRENT_TEST" in os.environ:
@@ -123,6 +115,7 @@ def add_calculation_inputs(subdirs, files):
         # for each entry establish dir path and build file tree.
         for subdir in subdirs:
             if os.path.isfile(subdir):
+                input_list.append(subdir.split("/")[-1])
                 # Create a folder that is empty.
                 if subdir.split("/")[0] not in calc_inputs["tleap_dirs"].keys():
                     calc_inputs["tleap_dirs"][subdir.split("/")[0]] = FolderData()
@@ -132,15 +125,8 @@ def add_calculation_inputs(subdirs, files):
             else:
                 sys.exit(f"Error: subdir {subdir} referenced in tleap file does not exist")
 
-    # # Now add the default subdirs used by tleap to load ff files
-    # default_dirs = ["prep", "lib", "parm", "cmd"]
-    # for dir in default_dirs:
-    #     subdir = f"$AMBERHOME/dat/leap/{dir}"
-    #     # Create a folder that is empty.
-    #     calc_inputs["tleap_dirs"][dir] = FolderData()
-    #     # Now fill it with files referenced in the tleap inputfile.
-    #     calc_inputs["tleap_dirs"][dir].put_object_from_file(
-    #         subdir, path=subdir)
+    # NOTE: this list is not used at the moment, might use for searchprevious
+    calc_inputs["input_list"] = List(input_list)
 
     return calc_inputs
 

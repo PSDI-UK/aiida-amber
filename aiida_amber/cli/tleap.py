@@ -12,6 +12,7 @@ from aiida import cmdline, engine
 from aiida.plugins import CalculationFactory, DataFactory
 
 from aiida_amber import helpers
+from aiida_amber.utils import searchprevious
 from aiida_amber.data.tleap_input import TleapInputData
 
 # from aiida_amber.utils import searchprevious
@@ -55,13 +56,11 @@ def launch(params):
     SinglefileData = DataFactory("core.singlefile")
     # inputs["tleapfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
     inputs["tleapfile"] = TleapInputData(file=os.path.join(os.getcwd(), params.pop("f")))
-    calc_inputs, calc_outputs = inputs["tleapfile"].calculation_inputs
+    calc_inputs, calc_outputs = inputs["tleapfile"].calculation_inputs_outputs
     # add input files and dirs referenced in tleap file into inputs
     inputs.update(calc_inputs)
     inputs.update(calc_outputs)
-    # print(inputs, inputs["tleapfile"].outfile_list)
     print(inputs)
-
 
     if "i" in params:
         for i, subdir in enumerate(params["i"]):
@@ -73,8 +72,9 @@ def launch(params):
     TleapParameters = DataFactory("amber.tleap")
     inputs["parameters"] = TleapParameters(params)
 
+    # TODO: need to search previous processes properly
     # check if inputs are outputs from prev processes
-    # inputs = searchprevious.get_prev_inputs(inputs, ["tprfile"])
+    # inputs = searchprevious.append_prev_nodes(inputs, inputs["input_list"])
 
     # check if a pytest test is running, if so run rather than submit aiida job
     # Note: in order to submit your calculation to the aiida daemon, do:
