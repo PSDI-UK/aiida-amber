@@ -55,19 +55,23 @@ docs = [
 [project.scripts]
 aiida_sander = "aiida_amber.cli.sander:cli"
 aiida_tleap = "aiida_amber.cli.tleap:cli"
+aiida_antechamber = "aiida_amber.cli.antechamber:cli"
 
 [project.entry-points."aiida.data"]
 "amber.sander" = "aiida_amber.data.sander:SanderParameters"
 "amber.tleap" = "aiida_amber.data.tleap:TleapParameters"
 "amber.tleap_input" = "aiida_amber.data.tleap_input:TleapInputData"
+"amber.antechamber" = "aiida_amber.data.antechamber:AntechamberParameters"
 
 [project.entry-points."aiida.calculations"]
 "amber.sander" = "aiida_amber.calculations.sander:SanderCalculation"
 "amber.tleap" = "aiida_amber.calculations.tleap:TleapCalculation"
+"amber.antechamber" = "aiida_amber.calculations.antechamber:AntechamberCalculation"
 
 [project.entry-points."aiida.parsers"]
 "amber.sander" = "aiida_amber.parsers.sander:SanderParser"
 "amber.tleap" = "aiida_amber.parsers.tleap:TleapParser"
+"amber.antechamber" = "aiida_amber.parsers.antechamber:AntechamberParser"
 
 [tool.flit.module]
 name = "aiida_amber"

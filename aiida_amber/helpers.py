@@ -18,6 +18,7 @@ LOCALHOST_NAME = "localhost"
 executables = {
     "amber": "sander",
     "tleap": "tleap",
+    "antechamber": "antechamber",
     "bash": "bash",
 }
 
