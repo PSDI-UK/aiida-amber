@@ -1,9 +1,10 @@
-"""Methods for dealing with various types of files and 
+"""Methods for dealing with various types of files and
 directories that are used in processes and add them to aiida nodes"""
 
 import os
 import re
-from aiida.orm import SinglefileData, FolderData
+
+from aiida.orm import FolderData
 
 
 def format_link_label(filename: str) -> str:
@@ -27,6 +28,7 @@ def format_link_label(filename: str) -> str:
 
     return link_label
 
+
 def check_filepath(input_files: list):
     """Check if an input is a file or a path.
 
@@ -36,23 +38,23 @@ def check_filepath(input_files: list):
     subdirs = []
     files = []
     # Iterate all found files and check if they are in subdirs.
-    for input in input_files:
-        # paths containing dirs will have slashes in them, 
+    for i in input_files:
+        # paths containing dirs will have slashes in them,
         # otherwise they will be files
-        if "/" in input:
-            subdirs.append(input)
+        if "/" in i:
+            subdirs.append(i)
         else:
-            files.append(input)
+            files.append(i)
     return subdirs, files
 
 
 def add_subdir_to_node(dict_info, subdir):
-    """
-    """
+    """Add a subdir to a node."""
     # Create a folder that is empty.
     if subdir.split("/")[0] not in dict_info.keys():
         dict_info[subdir.split("/")[0]] = FolderData()
     # Now fill it with subdir and file.
     dict_info[subdir.split("/")[0]].put_object_from_file(
-        os.path.join(os.getcwd(), subdir), path=subdir.split("/")[-1])
+        os.path.join(os.getcwd(), subdir), path=subdir.split("/")[-1]
+    )
     return dict_info

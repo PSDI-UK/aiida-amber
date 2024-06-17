@@ -7,7 +7,7 @@ import os
 
 from aiida.common import CalcInfo, datastructures
 from aiida.engine import CalcJob
-from aiida.orm import SinglefileData, FolderData, List
+from aiida.orm import FolderData, List, SinglefileData
 from aiida.plugins import DataFactory
 
 TleapParameters = DataFactory("amber.tleap")
@@ -45,7 +45,7 @@ class TleapCalculation(CalcJob):
                    help="input file for tleap commands")
 
         # optional inputs
-        spec.input_namespace("tleap_inpfiles", valid_type=SinglefileData, 
+        spec.input_namespace("tleap_inpfiles", valid_type=SinglefileData,
                     required=False, dynamic=True, help="inputs referenced in tleap input file")
         spec.input_namespace("tleap_dirs", valid_type=FolderData, required=False, dynamic=True,
                    help="path to directory where inputs referenced in tleap input file are")
@@ -56,7 +56,7 @@ class TleapCalculation(CalcJob):
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
 
         # optional outputs
-        
+
         # set the list of output file names as an input so that it can be
         # iterated over in the parser later.
         spec.input('tleap_outfiles', valid_type=List, required=False,
@@ -81,6 +81,7 @@ class TleapCalculation(CalcJob):
             temporarily place all files needed by the calculation.
         :return: `aiida.common.datastructures.CalcInfo` instance
         """
+        # pylint: disable=too-many-branches
         codeinfo = datastructures.CodeInfo()
 
         # Setup data structures for files.
@@ -90,8 +91,7 @@ class TleapCalculation(CalcJob):
             "tleap_dirs",
             "dirs",
         ]
-        output_options = [
-        ]
+        output_options = []
         cmdline_input_files = {}
         input_files = []
         output_files = []
@@ -102,26 +102,32 @@ class TleapCalculation(CalcJob):
                 # If we have a dynamics data type then iterate the dict.
                 if item == "tleap_dirs":
                     for directory, obj in self.inputs[item].items():
-                        input_files.append((
-                            obj.uuid,
-                            '.',
-                            directory,
-                        ))
+                        input_files.append(
+                            (
+                                obj.uuid,
+                                ".",
+                                directory,
+                            )
+                        )
                 elif item == "tleap_inpfiles":
                     for _, obj in self.inputs[item].items():
-                        input_files.append((
-                            obj.uuid,
-                            obj.filename,
-                            obj.filename,
-                        ))
+                        input_files.append(
+                            (
+                                obj.uuid,
+                                obj.filename,
+                                obj.filename,
+                            )
+                        )
                 elif item == "dirs":
                     cmdline_input_files[item] = self.inputs[item].filename
                     for directory, obj in self.inputs[item].items():
-                        input_files.append((
-                            obj.uuid,
-                            '.',
-                            directory,
-                        ))
+                        input_files.append(
+                            (
+                                obj.uuid,
+                                ".",
+                                directory,
+                            )
+                        )
                 else:
                     cmdline_input_files[item] = self.inputs[item].filename
                     input_files.append(
@@ -129,7 +135,8 @@ class TleapCalculation(CalcJob):
                             self.inputs[item].uuid,
                             self.inputs[item].filename,
                             self.inputs[item].filename,
-                        ))
+                        )
+                    )
 
         # Add output files to retrieve list.
         output_files.append(self.metadata.options.output_filename)

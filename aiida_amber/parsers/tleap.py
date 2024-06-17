@@ -41,13 +41,12 @@ class TleapParser(Parser):
         """
         # get_option() convenience method is used to get the filename of
         # the output file
-        output_filename = self.node.get_option("output_filename")
+        # output_filename = self.node.get_option("output_filename")
         # the directory for storing parsed output files
         output_dir = Path(self.node.get_option("output_dir"))
         # Map output files to how they are named.
         outputs = ["stdout"]
-        output_template = {
-        }
+        output_template = {}
 
         for item, val in output_template.items():
             if item in self.node.inputs.parameters.keys():
@@ -71,11 +70,11 @@ class TleapParser(Parser):
             return self.exit_codes.ERROR_MISSING_OUTPUT_FILES
 
         # Map retrieved files to data nodes.
-        for i, f in enumerate(files_expected):
+        for f in files_expected:
             self.logger.info(f"Parsing '{f}'")
             with self.retrieved.base.repository.open(f, "rb") as handle:
                 output_node = SinglefileData(filename=f, file=handle)
-            self.out(files_expected[i], output_node)
+            self.out(f, output_node)
 
         # If not in testing mode, then copy back the files.
         if "PYTEST_CURRENT_TEST" not in os.environ:

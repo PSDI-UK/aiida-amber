@@ -3,12 +3,10 @@ import os
 
 from aiida.engine import run
 from aiida.plugins import CalculationFactory, DataFactory
+
 from aiida_amber.data.tleap_input import TleapInputData
-import subprocess
-import sys
 
-
-from .. import TEST_DIR
+# from .. import TEST_DIR
 
 
 def run_tleap(amber_code):
@@ -28,7 +26,6 @@ def run_tleap(amber_code):
         }
     )
 
-
     # set up calculation
     inputs = {
         "code": amber_code,
@@ -40,19 +37,17 @@ def run_tleap(amber_code):
 
     # Prepare input parameters in AiiDA formats.
     # Set the tleap script as a TleapInputData type node
-    inputs["tleapscript"] = TleapInputData(file=os.path.join(os.getcwd(), "tests/input_files/tleap", "tleap.in"))
+    inputs["tleapscript"] = TleapInputData(
+        file=os.path.join(os.getcwd(), "tests/input_files/tleap", "tleap.in")
+    )
 
     # Find the inputs and outputs referenced in the tleap script
     calc_inputs, calc_outputs = inputs["tleapscript"].calculation_inputs_outputs
     # add input files and dirs referenced in tleap file into inputs
     inputs.update(calc_inputs)
     inputs.update(calc_outputs)
-    print("___", calc_inputs, calc_outputs)
-    print("TEST_DIR", TEST_DIR)
-
 
     result = run(CalculationFactory("amber.tleap"), **inputs)
-    # print("^^^", result)
     return result
 
 
@@ -62,10 +57,10 @@ def test_process(amber_code):
 
     result = run_tleap(amber_code)
 
-    # assert "stdout" in result
+    assert "stdout" in result
     # assert "out" in result["tleap"]
-    #assert "complex__prmtop" in result
-    #assert "complex__inpcrd" in result
+    # assert "complex__prmtop" in result
+    # assert "complex__inpcrd" in result
 
 
 def test_file_name_match(amber_code):
@@ -73,7 +68,7 @@ def test_file_name_match(amber_code):
 
     result = run_tleap(amber_code)
 
-    # assert result["stdout"].list_object_names()[0] == "tleap.out"
+    assert result["stdout"].list_object_names()[0] == "tleap.out"
     # assert result["tleap"]["out"].list_object_names()[0] == "tleap.out"
-    #assert result["complex__prmtop"].list_object_names()[0] == "complex.prmtop"
-    #assert result["complex__inpcrd"].list_object_names()[0] == "complex.inpcrd"
+    # assert result["complex__prmtop"].list_object_names()[0] == "complex.prmtop"
+    # assert result["complex__inpcrd"].list_object_names()[0] == "complex.inpcrd"

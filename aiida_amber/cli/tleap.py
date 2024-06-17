@@ -5,15 +5,14 @@ Usage: aiida_tleap --help
 """
 
 import os
-import sys
+
 import click
 
 from aiida import cmdline, engine
-from aiida.plugins import CalculationFactory, DataFactory
 from aiida.orm import SinglefileData
+from aiida.plugins import CalculationFactory, DataFactory
 
 from aiida_amber import helpers
-from aiida_amber.utils import searchprevious
 from aiida_amber.data.tleap_input import TleapInputData
 
 # from aiida_amber.utils import searchprevious
@@ -48,7 +47,9 @@ def launch(params):
 
     # Prepare input parameters in AiiDA formats.
     # Set the tleap script as a TleapInputData type node
-    inputs["tleapscript"] = TleapInputData(file=os.path.join(os.getcwd(), params.pop("f")))
+    inputs["tleapscript"] = TleapInputData(
+        file=os.path.join(os.getcwd(), params.pop("f"))
+    )
 
     # Find the inputs and outputs referenced in the tleap script
     calc_inputs, calc_outputs = inputs["tleapscript"].calculation_inputs_outputs
@@ -67,7 +68,7 @@ def launch(params):
     TleapParameters = DataFactory("amber.tleap")
     inputs["parameters"] = TleapParameters(params)
 
-    # TODO: need to search previous processes properly
+    # need to search previous processes properly
     # check if inputs are outputs from prev processes
     # inputs = searchprevious.append_prev_nodes(inputs, inputs["input_list"])
 
@@ -96,7 +97,8 @@ def launch(params):
 )
 @click.option(
     "-I",
-    type=str, multiple=True,
+    type=str,
+    multiple=True,
     help="dir containing leaprc files",
 )
 def cli(*args, **kwargs):
