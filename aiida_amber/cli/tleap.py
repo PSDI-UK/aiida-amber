@@ -10,6 +10,7 @@ import click
 
 from aiida import cmdline, engine
 from aiida.plugins import CalculationFactory, DataFactory
+from aiida.orm import SinglefileData
 
 from aiida_amber import helpers
 from aiida_amber.utils import searchprevious
@@ -30,13 +31,6 @@ def launch(params):
 
     # Prune unused CLI parameters from dict.
     params = {k: v for k, v in params.items() if v is not None}
-    # print(params)
-
-    #print(params)
-    #print(os.path.join(os.getcwd(), params["f"]))
-    # test1 = TleapInputData(file=os.path.join(os.getcwd(), params["f"]))
-    # print(test1.attributes)
-    # sys.exit()
 
     # dict to hold our calculation data.
     inputs = {
@@ -53,10 +47,11 @@ def launch(params):
         inputs["code"] = helpers.get_code(entry_point="tleap", computer=computer)
 
     # Prepare input parameters in AiiDA formats.
-    SinglefileData = DataFactory("core.singlefile")
-    # inputs["tleapfile"] = SinglefileData(file=os.path.join(os.getcwd(), params.pop("f")))
-    inputs["tleapfile"] = TleapInputData(file=os.path.join(os.getcwd(), params.pop("f")))
-    calc_inputs, calc_outputs = inputs["tleapfile"].calculation_inputs_outputs
+    # Set the tleap script as a TleapInputData type node
+    inputs["tleapscript"] = TleapInputData(file=os.path.join(os.getcwd(), params.pop("f")))
+
+    # Find the inputs and outputs referenced in the tleap script
+    calc_inputs, calc_outputs = inputs["tleapscript"].calculation_inputs_outputs
     # add input files and dirs referenced in tleap file into inputs
     inputs.update(calc_inputs)
     inputs.update(calc_outputs)
@@ -97,7 +92,7 @@ def launch(params):
 )
 # Input file options
 @click.option(
-    "-f", default="tleapfile", type=str, help="input file for tleap commands"
+    "-f", default="tleapscript", type=str, help="input script for tleap commands"
 )
 @click.option(
     "-I",

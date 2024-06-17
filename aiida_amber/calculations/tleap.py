@@ -41,7 +41,7 @@ class TleapCalculation(CalcJob):
                 help='Directory where output files will be saved when parsed.')
         spec.input('parameters', valid_type=TleapParameters,
                    help='Command line parameters for tleap')
-        spec.input("tleapfile", valid_type=SinglefileData,
+        spec.input("tleapscript", valid_type=SinglefileData,
                    help="input file for tleap commands")
 
         # optional inputs
@@ -85,7 +85,7 @@ class TleapCalculation(CalcJob):
 
         # Setup data structures for files.
         input_options = [
-            "tleapfile",
+            "tleapscript",
             "tleap_inpfiles",
             "tleap_dirs",
             "dirs",

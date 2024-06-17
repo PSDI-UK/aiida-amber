@@ -1,4 +1,4 @@
-"""Sub class of `Data` to handle inputs used and outputs produced
+"""Sub class of `Data` to handle inputs used and outputs that will be produced
 from commands in the tleap input file."""
 import re
 import os
@@ -19,22 +19,22 @@ class TleapInputData(SinglefileData):
         """
         super().set_file(file, filename, **kwargs)
 
-        # Parse the force constants file
-        dictionary = parse_tleap_input_file(self.get_content().splitlines())
+        # Parse the tleap file
+        parsed_info = parse_tleap_input_file(self.get_content().splitlines())
 
         # Add all other attributes found in the parsed dictionary
-        for key, value in dictionary.items():
+        for key, value in parsed_info.items():
             self.base.attributes.set(key, value)
 
     @property
     def inpfile_list(self):
-        """Return the list input files
+        """Return the list input files used in the tleap script
         """
         return self.base.attributes.get('input_files')
     
     @property
     def outfile_list(self):
-        """Return the list output files
+        """Return the list output files to be produced from the tleap script
         """
         return self.base.attributes.get('output_files')
 
@@ -51,7 +51,7 @@ class TleapInputData(SinglefileData):
 
 
 def parse_tleap_input_file(lines):
-    """Parse tleap input file and find any instances of file loads (inputs)
+    """Parse tleap script and find any instances of file loads (inputs)
     or saves (outputs)
     """
     input_files = []
@@ -84,7 +84,7 @@ def parse_tleap_input_file(lines):
 
 
 def add_calculation_inputs(subdirs, files):
-    """If they exist, add tleap input files and dirs into the calcjob 
+    """If they exist, add input files for tleap and dirs into the calcjob 
     inputs directory
     """
     calc_inputs = {}
@@ -94,17 +94,22 @@ def add_calculation_inputs(subdirs, files):
         calc_inputs["tleap_inpfiles"] = {}
         # Iterate files to assemble a dict of names and paths.
         for file in files:
+            formatted_filename = node_utils.format_link_label(file)
             if os.path.isfile(file):
                 input_list.append(file)
-                formatted_filename = node_utils.format_link_label(file)
-                # set correct file path for tests
-                if "PYTEST_CURRENT_TEST" in os.environ:
+                calc_inputs["tleap_inpfiles"][formatted_filename] = \
+                    SinglefileData(file=os.path.join(os.getcwd(), file))
+
+            elif "PYTEST_CURRENT_TEST" in os.environ:
+                test_path = os.path.join(os.getcwd(), 
+                                        'tests/input_files/tleap', file)
+                if os.path.isfile(test_path):
                     calc_inputs["tleap_inpfiles"][formatted_filename] = \
-                        SinglefileData(file=os.path.join(os.getcwd(), 
-                                        'tests/input_files', file))
+                        SinglefileData(file=test_path)
                 else:
-                    calc_inputs["tleap_inpfiles"][formatted_filename] = \
-                        SinglefileData(file=os.path.join(os.getcwd(), file))
+                    sys.exit(f"Error: Input file {file} referenced in tleap file does not exist")
+
+            
             else:
                 sys.exit(f"Error: Input file {file} referenced in tleap file does not exist")
 
@@ -115,13 +120,30 @@ def add_calculation_inputs(subdirs, files):
         # for each entry establish dir path and build file tree.
         for subdir in subdirs:
             if os.path.isfile(subdir):
+                # add file to input list
                 input_list.append(subdir.split("/")[-1])
+                frst_dir = subdir.split("/")[0]
                 # Create a folder that is empty.
-                if subdir.split("/")[0] not in calc_inputs["tleap_dirs"].keys():
-                    calc_inputs["tleap_dirs"][subdir.split("/")[0]] = FolderData()
+                if frst_dir not in calc_inputs["tleap_dirs"].keys():
+                    calc_inputs["tleap_dirs"][frst_dir] = FolderData()
                 # Now fill it with files referenced in the tleap inputfile.
-                calc_inputs["tleap_dirs"][subdir.split("/")[0]].put_object_from_file(
-                    os.path.join(os.getcwd(), subdir), path=subdir.split("/")[-1])
+                # need to make sure to include any nested dirs in the path
+                calc_inputs["tleap_dirs"][frst_dir].put_object_from_file(
+                    os.path.join(os.getcwd(), subdir), 
+                    path="/".join(subdir.split("/")[1:]) # remove the first dir
+                    )
+                
+            # For tests
+            elif "PYTEST_CURRENT_TEST" in os.environ:
+                if os.path.isfile(os.path.join(os.getcwd(), "tests", subdir)):
+                    # Create a folder that is empty.
+                    if "tests" not in calc_inputs["tleap_dirs"].keys():
+                        calc_inputs["tleap_dirs"]["tests"] = FolderData()
+                    # Now fill it with files referenced in the tleap inputfile.
+                    calc_inputs["tleap_dirs"]["tests"].put_object_from_file(
+                        os.path.join(os.getcwd(), "tests", subdir), 
+                        path=subdir)
+                        
             else:
                 sys.exit(f"Error: subdir {subdir} referenced in tleap file does not exist")
 
@@ -132,8 +154,7 @@ def add_calculation_inputs(subdirs, files):
 
 
 def add_calculation_outputs(files):
-    """If they exist, add tleap input files and dirs into the calcjob 
-    inputs directory
+    """Add outputs from tleap script
     """
     calc_outputs = {}
     # If we have tleap output files then tag them.

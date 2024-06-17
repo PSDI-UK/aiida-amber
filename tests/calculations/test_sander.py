@@ -1,4 +1,4 @@
-""" Tests for calculations."""
+""" Tests for sander calculations."""
 import os
 
 from aiida.engine import run

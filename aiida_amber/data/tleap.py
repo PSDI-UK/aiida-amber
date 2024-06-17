@@ -66,7 +66,7 @@ class TleapParameters(Dict):  # pylint: disable=too-many-ancestors
 
         # parameters.append("tleap")
         # required inputs
-        parameters.extend(["-f", input_files["tleapfile"]])
+        parameters.extend(["-f", input_files["tleapscript"]])
         # optional inputs
         if "dirs" in input_files:
             for dir in input_files["dirs"]:
