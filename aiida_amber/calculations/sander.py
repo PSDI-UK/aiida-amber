@@ -37,6 +37,8 @@ class SanderCalculation(CalcJob):
         spec.inputs["metadata"]["options"]["parser_name"].default = "amber.sander"
         spec.input('metadata.options.output_filename', valid_type=str,
                    default='sander.out')
+        spec.input('metadata.options.output_dir', valid_type=str, default=os.getcwd(),
+                help='Directory where output files will be saved when parsed.')
         spec.input('parameters', valid_type=SanderParameters,
                    help='Command line parameters for sander')
         spec.input("mdin", valid_type=SinglefileData,
@@ -47,8 +49,6 @@ class SanderCalculation(CalcJob):
         spec.input("inpcrd", valid_type=SinglefileData,
                    help="input initial coordinates and (optionally) "
                    "velocities and periodic box size.")
-        spec.input('metadata.options.output_dir', valid_type=str, default=os.getcwd(),
-                help='Directory where output files will be saved when parsed.')
 
         # optional inputs
         spec.input("refc", valid_type=SinglefileData, required=False,

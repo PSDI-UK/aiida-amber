@@ -198,12 +198,12 @@ def cli(*args, **kwargs):
 
     Example usage:
 
-    $ aiida_sander -O -i input_files/01_Min.in -o 01_Min.out -p parm7 -c rst7 -r 01_Min.ncrst -inf 01_Min.mdinfo
+    $ aiida_sander --code amber@localhost -i input_files/01_Min.in -o 01_Min.out -p parm7 -c rst7 -r 01_Min.ncrst -inf 01_Min.mdinfo
 
-    Alternative (automatically tried to create gmx@localhost code, but requires
-    gromacs to be installed and available in your environment path):
+    Alternative (automatically tried to create amber@localhost code, but requires
+    amber to be installed and available in your environment path):
 
-    $ aiida_sander ... -s 1AKI_em.tpr -c 1AKI_minimised.gro -e 1AKI_minimised.edr -g 1AKI_minimised.log -o 1AKI_minimised.trr
+    $ aiida_sander -i input_files/01_Min.in -o 01_Min.out -p parm7 -c rst7 -r 01_Min.ncrst -inf 01_Min.mdinfo
 
     Help: $ aiida_sander --help
     """

@@ -23,7 +23,8 @@ keywords = ["aiida", "plugin", "amber", "aiida-amber"]
 requires-python = ">=3.8"
 dependencies = [
     "aiida-core>=2.4.0,<3",
-    "voluptuous"
+    "voluptuous",
+    "MDAnalysis>=2.7.0",
 ]
 
 [project.urls]
@@ -53,15 +54,20 @@ docs = [
 
 [project.scripts]
 aiida_sander = "aiida_amber.cli.sander:cli"
+aiida_tleap = "aiida_amber.cli.tleap:cli"
 
 [project.entry-points."aiida.data"]
 "amber.sander" = "aiida_amber.data.sander:SanderParameters"
+"amber.tleap" = "aiida_amber.data.tleap:TleapParameters"
+"amber.tleap_input" = "aiida_amber.data.tleap_input:TleapInputData"
 
 [project.entry-points."aiida.calculations"]
 "amber.sander" = "aiida_amber.calculations.sander:SanderCalculation"
+"amber.tleap" = "aiida_amber.calculations.tleap:TleapCalculation"
 
 [project.entry-points."aiida.parsers"]
 "amber.sander" = "aiida_amber.parsers.sander:SanderParser"
+"amber.tleap" = "aiida_amber.parsers.tleap:TleapParser"
 
 [tool.flit.module]
 name = "aiida_amber"
