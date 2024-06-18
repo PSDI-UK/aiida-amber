@@ -12,6 +12,8 @@ from aiida.orm import SinglefileData
 from aiida.parsers.parser import Parser
 from aiida.plugins import CalculationFactory
 
+from aiida_amber.utils import node_utils
+
 TleapCalculation = CalculationFactory("amber.tleap")
 
 
@@ -45,12 +47,12 @@ class TleapParser(Parser):
         # the directory for storing parsed output files
         output_dir = Path(self.node.get_option("output_dir"))
         # Map output files to how they are named.
-        outputs = ["stdout"]
-        output_template = {}
+        # outputs = ["stdout"]
+        # output_template = {}
 
-        for item, val in output_template.items():
-            if item in self.node.inputs.parameters.keys():
-                outputs.append(val)
+        # for item, val in output_template.items():
+        #     if item in self.node.inputs.parameters.keys():
+        #         outputs.append(val)
 
         # Grab list of retrieved files.
         files_retrieved = self.retrieved.base.repository.list_object_names()
@@ -62,6 +64,13 @@ class TleapParser(Parser):
             if files not in ["_scheduler-stdout.txt", "_scheduler-stderr.txt"]
         ]
 
+        # Check that folder content is as expected
+        files_retrieved = self.retrieved.list_object_names()
+        files_expected = ["tleap.out"]
+        if "tleap_outfiles" in self.node.inputs:
+            for name in self.node.inputs.tleap_outfiles:
+                files_expected.extend([str(name)])
+
         # Check if the expected files are a subset of retrieved.
         if not set(files_expected) <= set(files_retrieved):
             self.logger.error(
@@ -69,12 +78,15 @@ class TleapParser(Parser):
             )
             return self.exit_codes.ERROR_MISSING_OUTPUT_FILES
 
-        # Map retrieved files to data nodes.
-        for i, f in enumerate(files_expected):
-            self.logger.info(f"Parsing '{f}'")
-            with self.retrieved.base.repository.open(f, "rb") as handle:
-                output_node = SinglefileData(filename=f, file=handle)
-            self.out(outputs[i], output_node)
+        # passing along all expected output file as SinglefileData nodes.
+        for thing in files_expected:
+            self.logger.info(f"Parsing '{thing}'")
+            with self.retrieved.open(thing, "rb") as handle:
+                output_node = SinglefileData(file=handle, filename=thing)
+            if thing == "tleap.out":
+                self.out("stdout", output_node)
+            else:
+                self.out(node_utils.format_link_label(thing), output_node)
 
         # If not in testing mode, then copy back the files.
         if "PYTEST_CURRENT_TEST" not in os.environ:
