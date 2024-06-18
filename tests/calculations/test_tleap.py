@@ -6,21 +6,13 @@ from aiida.plugins import CalculationFactory, DataFactory
 
 from aiida_amber.data.tleap_input import TleapInputData
 
-# from .. import TEST_DIR
-
 
 def run_tleap(tleap_code):
     """Run an instance of sander and return the results."""
 
     # Prepare input parameters
     TleapParameters = DataFactory("amber.tleap")
-    parameters = TleapParameters(
-        {
-            # "o": "01_Min.out",
-            # "r": "01_Min.ncrst",
-            # "inf": "01_Min.mdinfo",
-        }
-    )
+    parameters = TleapParameters({})
 
     # set up calculation
     inputs = {
@@ -48,15 +40,14 @@ def run_tleap(tleap_code):
 
 
 def test_process(tleap_code):
-    """Test running a sander calculation.
+    """Test running a tleap calculation.
     Note: this does not test that the expected outputs are created of output parsing"""
 
     result = run_tleap(tleap_code)
 
     assert "stdout" in result
-    assert "out" in result["tleap"]
-    assert "complex__prmtop" in result
-    assert "complex__inpcrd" in result
+    assert "complex_prmtop" in result
+    assert "complex_inpcrd" in result
 
 
 def test_file_name_match(tleap_code):
@@ -65,6 +56,5 @@ def test_file_name_match(tleap_code):
     result = run_tleap(tleap_code)
 
     assert result["stdout"].list_object_names()[0] == "tleap.out"
-    assert result["tleap"]["out"].list_object_names()[0] == "tleap.out"
-    assert result["complex__prmtop"].list_object_names()[0] == "complex.prmtop"
-    assert result["complex__inpcrd"].list_object_names()[0] == "complex.inpcrd"
+    assert result["complex_prmtop"].list_object_names()[0] == "complex.prmtop"
+    assert result["complex_inpcrd"].list_object_names()[0] == "complex.inpcrd"
