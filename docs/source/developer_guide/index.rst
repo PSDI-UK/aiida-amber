@@ -2,29 +2,42 @@
 Developer guide
 ===============
 
+As a project we are open to contributions from the wider community to help us add new features. To get up and running as a developer contributing to this plugin, you will need to have a working installation of AiiDA installed on your computer. You should follow the steps to install AiiDA on the following page, but don't run the pip install of the aiida-amber plugin :doc:`../user_guide/installation` you will also need to have the conda environment activated and the verdi daemon running :doc:`../user_guide/aiida_sessions`.
+
+Clone the repository
+++++++++++++++++++++
+
+The first step in getting going as a developer is to clone our git repository by either
+
+#. HTTPS::
+
+        git clone https://github.com/PSDI-UK/aiida-amber.git
+
+#. SSH::
+
+        git clone git@github.com:PSDI-UK/aiida-amber.git
+
 Running the tests
 +++++++++++++++++
 
+To run our test suite, in addition to having AiiDA installed, you should also have the daemon running, which will include the full AiiDA startup steps for the database and an initial user profile to be setup.
+
 The following will discover and run all unit test::
 
-    pip install --upgrade pip
     pip install -e .[testing]
     pytest -v
 
-You can also run the tests in a virtual environment with `tox <https://tox.wiki/en/latest/>`_::
-
-    pip install tox tox-conda
-    tox -e py38 -- -v
-
 Automatic coding style checks
 +++++++++++++++++++++++++++++
+
+We are implemting automated coding style checks, so that we are all commiting code to similar code quality standards.
 
 Enable enable automatic checks of code sanity and coding style::
 
     pip install -e .[pre-commit]
     pre-commit install
 
-After this, the `black <https://black.readthedocs.io>`_ formatter,
+After this, the `yapf <https://github.com/google/yapf>`_ formatter,
 the `pylint <https://www.pylint.org/>`_ linter
 and the `pylint <https://www.pylint.org/>`_ code analyzer will
 run at every commit.
@@ -33,20 +46,19 @@ If you ever need to skip these pre-commit hooks, just use::
 
     git commit -n
 
-You should also keep the pre-commit hooks up to date periodically, with::
+Though, for pull requests to be accepted, we will expect these to have been resolved before pulling.
 
-    pre-commit autoupdate
-
-Or consider using `pre-commit.ci <https://pre-commit.ci/>`_.
 
 Continuous integration
 ++++++++++++++++++++++
 
 ``aiida-amber`` comes with a ``.github`` folder that contains continuous integration tests on every commit using `GitHub Actions <https://github.com/features/actions>`_. It will:
 
-#. run all tests
-#. build the documentation
-#. check coding style and version number (not required to pass by default)
+#. run all tests including against several package dependencies and their versions.
+#. build the documentation.
+#. check coding style and version number (not required to pass by default).
+
+We have these activated on github via the github actions platform. When version numbers are tagged, we will also automatically push a version to pypi.
 
 Building the documentation
 ++++++++++++++++++++++++++
@@ -55,13 +67,11 @@ Building the documentation
 
         pip install -e .[docs]
 
- #. Edit the individual documentation pages::
+ #. Edit the individual documentation pages in::
 
-        docs/source/index.rst
-        docs/source/developer_guide/index.rst
-        docs/source/user_guide/index.rst
-        docs/source/user_guide/get_started.rst
-        docs/source/user_guide/tutorial.rst
+        docs/source/user_guide/
+        or
+        docs/source/developer_guide/
 
  #. Use `Sphinx`_ to generate the html documentation::
 
@@ -70,32 +80,33 @@ Building the documentation
 
 Check the result by opening ``build/html/index.html`` in your browser.
 
-Publishing the documentation
-++++++++++++++++++++++++++++
+Putting it all together
++++++++++++++++++++++++
 
-Once you're happy with your documentation, it's easy to host it online on ReadTheDocs_:
+Putting all of the above together into the following install commands::
 
- #. Create an account on ReadTheDocs_
+        git clone git@github.com:PSDI-UK/aiida-amber.git
+        cd aiida-amber
+        pip install -e .[docs,pre-commit,testing]
+        pre-commit install
 
- #. Import your ``aiida-amber`` repository (preferably using ``aiida-amber`` as the project name)
+Will install the plugin from the git repository with all of the above features activated.
 
-The documentation is now available at `aiida-amber.readthedocs.io <http://aiida-amber.readthedocs.io/>`_.
+Sending code contributions
+++++++++++++++++++++++++++
 
-PyPI release
-++++++++++++
+We will always welcome code contributions for new features, but these should always be via the submission of a pull request. Upon receiving a PR, the CI workflow will automatically run our test suite, buld the docs and run the pre-commit checks. One of the core developers will review the code submitted and make a decision based upon the fit of the PR with the project goals and make an assessment of the quality of the contribution.
 
-Your plugin is ready to be uploaded to the `Python Package Index <https://pypi.org/>`_.
-Just register for an account and use `flit <https://flit.readthedocs.io/en/latest/upload.html>`_::
+We would always recommend reporting problems/bugs via the issue tracker even if you intend to attempt a fix, likewise we would recommend contacting a member of the core team if developing features of your own so they can advise on the direction of the project.
 
-    pip install flit
-    flit publish
+Version Numbering
++++++++++++++++++
 
-After this, you (and everyone else) should be able to::
+We will align our version numbering against the AiiDA major series that the plugin release supports. So our first release will be v2.0.0, where the X in vX.Y.Z corresponds to the AiiDA major series that the plugin is supporting. So v2.0.0 will support AiiDA 2.x.x. The remaining two numbers in our versioning will represent major and minor changes to the plugin respectively. A minor release can be expected to be version compatible with no breaking changes, whilst a major release will be expected to cause changes that are breaking in nature.
 
-    pip install aiida-amber
+To make and release a new version of the plugin, update the version in ``__init__.py`` and then add the "tag-release" label to the PR. This will trigger the CI to automate tagging a release, make a new release on github and then push the new version to PyPI. This should be done after all relevant PRs for a particular release have been reviewed and merged to master and all the CI tests have completed and passed. You should make sure the version in ``__init__.py`` contains the following format vX.Y.Z, the "v" is important for CI automation. Upon merging the PR, actions will be triggered to auto make a github release with a full changelog, tests will run against the updated version and then a new version will be sent to PyPI for users to download.
 
-You can also enable *automatic* deployment of git tags to the python package index:
-simply generate a `PyPI API token <https://pypi.org/help/#apitoken>`_ for your PyPI account and add it as a secret to your GitHub repository under the name ``pypi_token`` (Go to Settings -> Secrets).
+Happy coding!
 
 
 .. _ReadTheDocs: https://readthedocs.org/
