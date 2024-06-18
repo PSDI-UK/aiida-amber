@@ -69,11 +69,11 @@ class AntechamberParser(Parser):
             return self.exit_codes.ERROR_MISSING_OUTPUT_FILES
 
         # Map retrieved files to data nodes.
-        for f in files_expected:
+        for i, f in enumerate(files_expected):
             self.logger.info(f"Parsing '{f}'")
             with self.retrieved.base.repository.open(f, "rb") as handle:
                 output_node = SinglefileData(filename=f, file=handle)
-            self.out(f, output_node)
+            self.out(outputs[i], output_node)
 
         # If not in testing mode, then copy back the files.
         if "PYTEST_CURRENT_TEST" not in os.environ:

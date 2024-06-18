@@ -9,12 +9,8 @@ from aiida_amber.data.tleap_input import TleapInputData
 # from .. import TEST_DIR
 
 
-def run_tleap(amber_code):
+def run_tleap(tleap_code):
     """Run an instance of sander and return the results."""
-
-    # profile = load_profile()
-    # computer = helpers.get_computer()
-    # amber_code = helpers.get_code(entry_point="amber", computer=computer)
 
     # Prepare input parameters
     TleapParameters = DataFactory("amber.tleap")
@@ -28,7 +24,7 @@ def run_tleap(amber_code):
 
     # set up calculation
     inputs = {
-        "code": amber_code,
+        "code": tleap_code,
         "parameters": parameters,
         "metadata": {
             "description": "tleap test",
@@ -51,24 +47,24 @@ def run_tleap(amber_code):
     return result
 
 
-def test_process(amber_code):
+def test_process(tleap_code):
     """Test running a sander calculation.
     Note: this does not test that the expected outputs are created of output parsing"""
 
-    result = run_tleap(amber_code)
+    result = run_tleap(tleap_code)
 
     assert "stdout" in result
-    # assert "out" in result["tleap"]
-    # assert "complex__prmtop" in result
-    # assert "complex__inpcrd" in result
+    assert "out" in result["tleap"]
+    assert "complex__prmtop" in result
+    assert "complex__inpcrd" in result
 
 
-def test_file_name_match(amber_code):
+def test_file_name_match(tleap_code):
     """Test that the file names returned match what was specified on inputs."""
 
-    result = run_tleap(amber_code)
+    result = run_tleap(tleap_code)
 
     assert result["stdout"].list_object_names()[0] == "tleap.out"
-    # assert result["tleap"]["out"].list_object_names()[0] == "tleap.out"
-    # assert result["complex__prmtop"].list_object_names()[0] == "complex.prmtop"
-    # assert result["complex__inpcrd"].list_object_names()[0] == "complex.inpcrd"
+    assert result["tleap"]["out"].list_object_names()[0] == "tleap.out"
+    assert result["complex__prmtop"].list_object_names()[0] == "complex.prmtop"
+    assert result["complex__inpcrd"].list_object_names()[0] == "complex.inpcrd"
