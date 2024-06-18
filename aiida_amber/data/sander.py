@@ -11,10 +11,7 @@ from aiida.orm import Dict
 
 # A subset of sander's command line options
 cmdline_options = {
-    # Required("i", default="mdin"): str,
     Required("o", default="mdout"): str,
-    # Required("p", default="prmtop"): str,
-    # Required("c", default="inpcrd"): str,
     Required("inf", default="mdinfo"): str,
     Optional("r"): str,
     Optional(

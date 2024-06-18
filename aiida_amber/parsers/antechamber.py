@@ -1,7 +1,7 @@
 """
 Parsers provided by aiida_amber.
 
-This calculation configures the ability to use the 'tleap' executable.
+This calculation configures the ability to use the 'antechamber' executable.
 """
 import os
 from pathlib import Path
@@ -12,10 +12,10 @@ from aiida.orm import SinglefileData
 from aiida.parsers.parser import Parser
 from aiida.plugins import CalculationFactory
 
-TleapCalculation = CalculationFactory("amber.tleap")
+AntechamberCalculation = CalculationFactory("amber.antechamber")
 
 
-class TleapParser(Parser):
+class AntechamberParser(Parser):
     """
     Parser class for parsing output of calculation.
     """
@@ -24,14 +24,14 @@ class TleapParser(Parser):
         """
         Initialize Parser instance
 
-        Checks that the ProcessNode being passed was produced by a TleapCalculation.
+        Checks that the ProcessNode being passed was produced by a AntechamberCalculation.
 
         :param node: ProcessNode of calculation
         :param type node: :class:`aiida.orm.nodes.process.process.ProcessNode`
         """
         super().__init__(node)
-        if not issubclass(node.process_class, TleapCalculation):
-            raise exceptions.ParsingError("Can only parse TleapCalculation")
+        if not issubclass(node.process_class, AntechamberCalculation):
+            raise exceptions.ParsingError("Can only parse AntechamberCalculation")
 
     def parse(self, **kwargs):
         """
@@ -39,14 +39,13 @@ class TleapParser(Parser):
 
         :returns: an exit code, if parsing fails (or nothing if parsing succeeds)
         """
-        # get_option() convenience method is used to get the filename of
-        # the output file
-        # output_filename = self.node.get_option("output_filename")
         # the directory for storing parsed output files
         output_dir = Path(self.node.get_option("output_dir"))
         # Map output files to how they are named.
         outputs = ["stdout"]
-        output_template = {}
+        output_template = {
+            "o": "output_file",
+        }
 
         for item, val in output_template.items():
             if item in self.node.inputs.parameters.keys():
