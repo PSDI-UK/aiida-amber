@@ -8,6 +8,11 @@ The aiida-amber plugin for `AiiDA`_
 
 ``aiida-amber`` is available at http://github.com/PSDI-UK/aiida-amber
 
+.. image:: images/amber-BioSimDB-logo.png
+    :width: 250px
+    :align: center
+    :target: https://github.com/PSDI-UK/aiida-amber
+
 
 .. toctree::
    :maxdepth: 2
