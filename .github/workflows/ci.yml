@@ -12,7 +12,7 @@ jobs:
       matrix:
         container: [ubuntu22.04-py3.11.7]
         aiida: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2]
-        amber: [nompi_py311he003265_102]
+        amber: [23.6=nompi_py311he003265_102]
         # openssl: [3.3.1=h4ab18f5_0]
     runs-on: ubuntu-latest
     timeout-minutes: 30
