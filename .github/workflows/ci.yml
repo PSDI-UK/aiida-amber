@@ -13,6 +13,7 @@ jobs:
         container: [ubuntu22.04-py3.12.1]
         aiida: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2]
         amber: [23.6=py312h1577c9a_0]
+        openssl: [3.3.1=h4ab18f5_0]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
@@ -23,7 +24,7 @@ jobs:
 
     - name: Install conda packages
       shell: bash
-      run: mamba install ambertools=${{ matrix.amber }} aiida-core=${{ matrix.aiida }} aiida-core.services=${{ matrix.aiida }} -c conda-forge -yq
+      run: mamba install openssl=${{ matrix.openssl }} ambertools=${{ matrix.amber }} aiida-core=${{ matrix.aiida }} aiida-core.services=${{ matrix.aiida }} -c conda-forge -yq
 
     - name: Initialise PostGRES DB
       shell: bash
