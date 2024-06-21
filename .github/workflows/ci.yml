@@ -10,10 +10,10 @@ jobs:
   tests:
     strategy:
       matrix:
-        container: [ubuntu22.04-py3.12.1]
+        container: [ubuntu22.04-py3.11.7]
         aiida: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2]
-        amber: [23.6=py312h1577c9a_0]
-        openssl: [3.3.1=h4ab18f5_0]
+        amber: [nompi_py311he003265_102]
+        # openssl: [3.3.1=h4ab18f5_0]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
@@ -24,7 +24,7 @@ jobs:
 
     - name: Install conda packages
       shell: bash
-      run: mamba install openssl=${{ matrix.openssl }} ambertools=${{ matrix.amber }} aiida-core=${{ matrix.aiida }} aiida-core.services=${{ matrix.aiida }} -c conda-forge -yq
+      run: mamba install ambertools=${{ matrix.amber }} aiida-core=${{ matrix.aiida }} aiida-core.services=${{ matrix.aiida }} -c conda-forge -yq
 
     - name: Initialise PostGRES DB
       shell: bash
@@ -66,10 +66,10 @@ jobs:
     timeout-minutes: 15
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.12
+    - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
-        python-version: 3.12
+        python-version: 3.11
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
@@ -82,10 +82,10 @@ jobs:
     timeout-minutes: 15
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.12
+    - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
-        python-version: 3.12
+        python-version: 3.11
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
