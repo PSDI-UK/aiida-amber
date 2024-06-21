@@ -8,50 +8,57 @@ on:
 jobs:
 
   tests:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
     strategy:
       matrix:
-        python-version: ["3.11"]
-        aiida-version: ["stable"]
-
-    services:
-      postgres:
-        image: postgres:10
-        env:
-          POSTGRES_DB: test_aiida
-          POSTGRES_PASSWORD: ''
-          POSTGRES_HOST_AUTH_METHOD: trust
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-      rabbitmq:
-        image: rabbitmq:latest
-        ports:
-          - 5672:5672
-
+        container: [py3.11.0]
+        aiida: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2]
+        amber: [23.6=nompi_py312h7ba77cb_103]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    container:
+        image: harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:${{ matrix.container }}
+    name: container = ${{ matrix.container }}, aiida = ${{ matrix.aiida }}, amber = ${{ matrix.amber }}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
+    - name: Install conda packages
+      shell: bash
+      run: mamba install ambertools=${{ matrix.amber }} aiida-core=${{ matrix.aiida }} aiida-core.services=${{ matrix.aiida }} -c conda-forge -yq
 
-    - name: Install python dependencies
-      run: |
-        pip install --upgrade pip
-        pip install -e .[testing]
+    - name: Initialise PostGRES DB
+      shell: bash
+      run: initdb -D /home/aiida/.aiida/aiida_db
+
+    - name: Start PostGRES DB
+      shell: bash
+      run: pg_ctl -D /home/aiida/.aiida/aiida_db -l /home/aiida/.aiida/logfile start
+
+    - name: Start RabbitMQ
+      shell: bash
+      run: rabbitmq-server -detached
+
+    - name: Setup AiiDA profile
+      shell: bash
+      run: printf '%s\n' testing test@test.com testy tester testorg | verdi quicksetup
+
+    - name: Start AiiDA Daemon set
+      shell: bash
+      run: verdi daemon start 2
+
+    - name: Check Daemons are running
+      shell: bash
+      run: verdi status
+
+    - name: Install aiida-amber and its testing dependencies
+      shell: bash
+      run: pip install -e .[testing]
 
     - name: Run test suite
-      env:
-        # show timings of tests
-        PYTEST_ADDOPTS: "--durations=0"
-      run: pytest --cov aiida_amber --cov-append .
+      shell: bash
+      run: pytest --cov aiida_amber --cov-report term-missing --cov-append .
+
+    - name: Report Coverage
+      uses: coverallsapp/github-action@v2
 
   docs:
     runs-on: ubuntu-latest
@@ -69,7 +76,7 @@ jobs:
     - name: Build docs
       run: cd docs && make
 
-   pre-commit:
+  pre-commit:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
