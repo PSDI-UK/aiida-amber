@@ -10,7 +10,7 @@ jobs:
   tests:
     strategy:
       matrix:
-        container: [py3.11.0]
+        container: [py3.12.1]
         aiida: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2]
         amber: [23.6=nompi_py312h7ba77cb_103]
     runs-on: ubuntu-latest
