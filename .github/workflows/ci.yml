@@ -12,7 +12,7 @@ jobs:
       matrix:
         container: [py3.11.0]
         aiida: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2]
-        amber: [23.6=nompi_py312h7ba77cb_103]
+        amber: [22.5=py39h9e491d2_0]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
