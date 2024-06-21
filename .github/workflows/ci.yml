@@ -12,7 +12,7 @@ jobs:
       matrix:
         container: [ubuntu22.04-py3.12.1]
         aiida: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2]
-        amber: [23.6=py39h7fa913e_0]
+        amber: [23.6=py312h1577c9a_0]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
