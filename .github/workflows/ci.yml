@@ -25,7 +25,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: create amber environment
+    - name: install AmberTools
       shell: bash
       run: mamba install ambertools=${{ matrix.amber }} -c conda-forge -yq
 
