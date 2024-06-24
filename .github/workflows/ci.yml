@@ -34,9 +34,9 @@ jobs:
       shell: bash
       run: source /opt/conda/envs/AmberTools23/amber.sh
 
-    - name: check sander environment
+    - name: check amber environment
       shell: bash
-      run: echo $AMBERHOME
+      run: ls /opt/conda/envs/AmberTools23
 
     - name: Initialise PostGRES DB
       shell: bash
