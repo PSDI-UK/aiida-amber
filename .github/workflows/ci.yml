@@ -16,9 +16,7 @@ jobs:
                     2024-06-24-aiida2.5.0-py3.11.0,
                     2024-06-24-aiida2.5.1-py3.11.0,
                     2024-06-24-aiida2.5.2-py3.11.0]
-        # aiida: [2.4.0, 2.4.1, 2.4.2, 2.5.0, 2.5.1, 2.5.2]
         amber: [23.6=nompi_py311he003265_102]
-        # openssl: [3.3.1=h4ab18f5_0]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
@@ -27,45 +25,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # - name: Install conda packages
-    #   shell: bash
-    #   run: mamba install aiida-core=${{ matrix.aiida }} aiida-core.services=${{ matrix.aiida }} -c conda-forge -yq
-
     - name: create amber environment
       shell: bash
-      run: conda create -n AmberTools23 ambertools=${{ matrix.amber }} -c conda-forge
+      run: mamba install ambertools=${{ matrix.amber }} -c conda-forge -yq
 
-    - name: source amber environment
+    - name: Start AiiDA with a test profile
       shell: bash
-      run: source /opt/conda/envs/AmberTools23/amber.sh
-
-    - name: check amber environment
-      shell: bash
-      run: ls /opt/conda/envs/AmberTools23
-
-    - name: Initialise PostGRES DB
-      shell: bash
-      run: initdb -D /home/aiida/.aiida/aiida_db
-
-    - name: Start PostGRES DB
-      shell: bash
-      run: pg_ctl -D /home/aiida/.aiida/aiida_db -l /home/aiida/.aiida/logfile start
-
-    - name: Start RabbitMQ
-      shell: bash
-      run: rabbitmq-server -detached
-
-    - name: Setup AiiDA profile
-      shell: bash
-      run: printf '%s\n' testing test@test.com testy tester testorg | verdi quicksetup
-
-    - name: Start AiiDA Daemon set
-      shell: bash
-      run: verdi daemon start 2
-
-    - name: Check Daemons are running
-      shell: bash
-      run: verdi status
+      run: /home/aiida/aiida-start
 
     - name: Install aiida-amber and its testing dependencies
       shell: bash
