@@ -28,7 +28,7 @@ jobs:
 
     - name: create amber environment
       shell: bash
-      run: conda create -n AmberTools23 ambertools=${{ matrix.amber }} -c conda-forge -yq
+      run: mamba create -n AmberTools23 ambertools=${{ matrix.amber }} -c conda-forge -yq
 
     - name: source amber environment
       shell: bash
