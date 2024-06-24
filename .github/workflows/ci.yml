@@ -36,7 +36,7 @@ jobs:
 
     - name: check sander environment
       shell: bash
-      run: which sander
+      run: echo $AMBERHOME
 
     - name: Initialise PostGRES DB
       shell: bash
