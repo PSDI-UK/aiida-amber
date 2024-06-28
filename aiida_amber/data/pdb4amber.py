@@ -12,30 +12,31 @@ from aiida.orm import Dict
 # A subset of pdb4amber command line options
 cmdline_options = {
     Required("o", default="stdout"): str,
-    Optional("y"): str,
-    Optional("nohyd"): str,
-    Optional("d"): str,
-    Optional("dry"): str,
+    # Required("out", default="stdout"): str,
+    Optional("y"): bool,
+    Optional("nohyd"): bool,
+    Optional("d"): bool,
+    Optional("dry"): bool,
     Optional("s"): str,
     Optional("strip"): str,
     Optional("m"): str,
     Optional("mutate"): str,
-    Optional("p"): str,
-    Optional("prot"): str,
-    Optional("a"): str,
-    Optional("amber-compatible-residues"): str,
-    Optional("constantph"): str,
-    Optional("most-populous"): str,
-    Optional("keep-altlocs"): str,
-    Optional("reduce"): str,
-    Optional("no-reduce-db"): str,
+    Optional("p"): bool,
+    Optional("prot"): bool,
+    Optional("a"): bool,
+    Optional("amber-compatible-residues"): bool,
+    Optional("constantph"): bool,
+    Optional("most-populous"): bool,
+    Optional("keep-altlocs"): bool,
+    Optional("reduce"): bool,
+    Optional("no-reduce-db"): bool,
     Optional("pdbid"): str,
-    Optional("add-missing-atoms"): str,
+    Optional("add-missing-atoms"): bool,
     Optional("model"): str,
     Optional("l"): str,
     Optional("logfile"): str,
-    Optional("v"): str,
-    Optional("version"): str,
+    Optional("v"): bool,
+    Optional("version"): bool,
     Optional("leap-template"): str,
     Optional("no-conect"): str,
     Optional("noter"): str,
@@ -99,9 +100,17 @@ class Pdb4amberParameters(Dict):  # pylint: disable=too-many-ancestors
         parm_dict = self.get_dict()
 
         for key, value in parm_dict.items():
-            parameters.extend(["-" + key, value])
+            dash = "-"
+            if len(key) > 1:
+                dash = "--"
+            if value not in [True, False]:
+                parameters.extend([dash + key, value])
+            else:
+                parameters.extend([dash + key])
+
 
         return [str(p) for p in parameters]
+        # return parameters
 
     def __str__(self):
         """String representation of node.

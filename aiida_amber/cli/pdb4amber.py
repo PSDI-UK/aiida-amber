@@ -5,10 +5,10 @@ Usage: aiida_pdb4amber --help
 """
 
 import os
-
+import sys
 import click
 
-from aiida import cmdline, engine
+from aiida import cmdline, engine, orm
 from aiida.orm import SinglefileData
 from aiida.plugins import CalculationFactory, DataFactory
 
@@ -21,15 +21,41 @@ def launch(params):
     """Run pdb4amber.
 
     Uses helpers to add amber on localhost to AiiDA on the fly.
+
+    Possible output files:
+
+    if -o stdout and -l log.txt:
+
+    stdout_renum.txt
+    stdout_nonprot.pdb
+    stdout_water.pdb
+    stdout_sslink
+    leap.template.in
+    log.txt
+
+    if -o test.pdb:
+    test.pdb
+    test_nonprot.pdb
+    test_renum.txt
+    test_sslink
+    test_water.pdb
+    
     """
 
     # Prune unused CLI parameters from dict.
-    params = {k: v for k, v in params.items() if v is not None}
+    params = {k: v for k, v in params.items() if v not in [None, False]}
+
+    print(params)
+    print()
+    print(params["o"])
+    # sys.exit()
 
     # dict to hold our calculation data.
     inputs = {
         "metadata": {
             "description": params.pop("description"),
+            # "options": {
+            #     "output_filename": params["o"]} # need to set name of stdout 
         },
     }
 
@@ -42,11 +68,28 @@ def launch(params):
 
     # Prepare input parameters in AiiDA formats.
     inputs["input_file"] = SinglefileData(
-        file=os.path.join(os.getcwd(), params.pop("i"))
+        file=os.path.join(os.getcwd(), params.pop("in"))
     )
+
+    # get all possible output files from arguments provided
+    # pdb4amber appends the prefix of filename defined in -o flag to some
+    # outputted files
+    prefix = params["o"].split(".")[0]
+    output_filenames = [f"{prefix}_sslink", f"{prefix}_nonprot.pdb", f"{prefix}_renum.txt"]
+    if "dry" in params:
+        water_file = f"{prefix}_water.pdb"
+        output_filenames.append(water_file)
+    if "leap-template" in params:
+        output_filenames.append("leap.template.in")
+    if "logfile" in params:
+        output_filenames.append(params.pop("log_file"))
+    inputs["pdb4amber_outfiles"] = orm.List(output_filenames)
 
     Pdb4amberParameters = DataFactory("amber.pdb4amber")
     inputs["parameters"] = Pdb4amberParameters(params)
+
+    print(inputs["parameters"].cmdline_params)
+    # sys.exit()
 
     # need to search previous processes properly
     # check if inputs are outputs from prev processes
@@ -73,48 +116,54 @@ def launch(params):
 )
 
 # Required inputs
-@click.option("-i", default="stdin", type=str, help="PDB input file (default: stdin)")  # file
+@click.option("-i", "--in", 
+        default="input.pdb", 
+        type=str, 
+        help="PDB input file (default: input.pdb)")  # file in
 # Required outputs
-@click.option("-o", default="stdout", type=str, help="PDB output file (default: stdout)")  # file
+@click.option("-o", 
+        default="stdout", 
+        type=str, 
+        help="PDB output file (default: stdout)")  # file out
 
 # optional output files
 @click.option(
-    "--logfile", "-l",
-    type=int,
-    help="FILE log filename",
+     "-l", "--logfile",
+    type=str,
+    help="FILE log filename", # file out
 )
 @click.option(
     "--leap-template",
-    type=str,
-    help="write a leap template for easy adaption (EXPERIMENTAL)",
+    is_flag=True,
+    help="write a leap template for easy adaption (EXPERIMENTAL)", #file out
 )
 
 # other parameters
 @click.option(
-    "--nohyd", "-y",
-    type=str,
+    "-y", "--nohyd", 
+    is_flag=True,
     help="remove all hydrogen atoms (default: no)",
 )
 @click.option(
-    "--dry", "-d",
-    type=str,
-    help="remove all water molecules (default: no)",
+     "-d", "--dry",
+    is_flag=True,
+    help="remove all water molecules (default: no)", # file out
 )
 @click.option(
-    "--strip", "-s",
+    "-s", "--strip", 
     type=str,
     help="""STRIP_ATOM_MASK
             Strip given atom mask, (default: no)""",
 )
 @click.option(
-    "--mutate", "-m",
+    "-m", "--mutate", 
     type=str,
     help="""MUTATION_STRING
             Mutate residue""",
 )
 @click.option(
-    "--prot", "-p",
-    type=str,
+    "-p", "--prot", 
+    is_flag=True,
     help="keep only protein residues (default: no)",
 )
 @click.option(
@@ -123,33 +172,33 @@ def launch(params):
     help="residue name, overrides input file, default is MOL",
 )
 @click.option(
-    "--amber-compatible-residues", "-a",
+    "-a", "--amber-compatible-residues", 
     type=str,
     help="keep only Amber-compatible residues (default: no)",
 )
 @click.option(
     "--constantph",
-    type=str,
+    is_flag=True,
     help="rename GLU,ASP,HIS for constant pH simulation",
 )
 @click.option(
     "--most-populous",
-    type=str,
+    is_flag=True,
     help="keep most populous alt. conf. (default is to keep 'A')",
 )
 @click.option(
     "--keep-altlocs",
-    type=str,
+    is_flag=True,
     help="Keep alternative conformations",
 )
 @click.option(
     "--reduce",
-    type=str,
+    is_flag=True,
     help="Run Reduce first to add hydrogens. (default: no)",
 )
 @click.option(
     "--no-reduce-db",
-    type=str,
+    is_flag=True,
     help="""If reduce is on, skip using it for hetatoms. 
             (default: usual reduce behavior for hetatoms)""",
 )
@@ -161,7 +210,7 @@ def launch(params):
 )
 @click.option(
     "--add-missing-atoms",
-    type=str,
+    is_flag=True,
     help="Use tleap to add missing atoms. (EXPERIMENTAL OPTION)",
 )
 @click.option(
@@ -173,18 +222,18 @@ def launch(params):
             Use a negative number to keep all models""",
 )
 @click.option(
-    "--version", "-v",
-    type=str,
+    "-v", "--version", 
+    is_flag=True,
     help="version",
 )
 @click.option(
     "--no-conect",
-    type=str,
+    is_flag=True,
     help="do Not write S-S CONECT records",
 )
 @click.option(
     "--noter",
-    type=str,
+    is_flag=True,
     help="do Not write TER records",
 )
 def cli(*args, **kwargs):

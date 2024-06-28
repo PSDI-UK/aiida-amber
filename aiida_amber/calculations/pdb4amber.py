@@ -36,21 +36,28 @@ class Pdb4amberCalculation(CalcJob):
         # required inputs
         spec.inputs["metadata"]["options"]["parser_name"].default = "amber.pdb4amber"
         spec.input('metadata.options.output_filename', valid_type=str,
-                   default='pdb4amber.out', help='name of file produced by default.')
+                   default='pdb4amber.out', help='name of file stdout produced by default.')
         spec.input('metadata.options.output_dir', valid_type=str, default=os.getcwd(),
                 help='Directory where output files will be saved when parsed.')
         spec.input('parameters', valid_type=Pdb4amberParameters,
                    help='Command line parameters for pdb4amber')
         spec.input("input_file", valid_type=SinglefileData,
-                   help="input structure file for pdb4amber")
+                   help="input pdb file for pdb4amber")
 
         # no optional inputs
 
         # required outputs
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
-        spec.output('output_file', valid_type=SinglefileData, help='output file')
+        spec.output('output_file', valid_type=SinglefileData, help='outputted pdb file')
 
         # optional outputs
+        # spec.output('sslink_file', valid_type=SinglefileData, help='sslink file')
+        # spec.output('renum_file', valid_type=SinglefileData, help='renum txt file')
+        # spec.output('nonprot_file', valid_type=SinglefileData, help='nonprot pdb file')
+        # spec.output('water_file', valid_type=SinglefileData, help='water pdb file')
+        # spec.output('reduce_logfile', valid_type=SinglefileData, help='reduce log file')
+        # spec.output('log_file', valid_type=SinglefileData, help='log file')
+        # spec.output('leap_template_file', valid_type=SinglefileData, help='leap template file')
 
         # set the list of output file names as an input so that it can be
         # iterated over in the parser later.
@@ -113,6 +120,7 @@ class Pdb4amberCalculation(CalcJob):
         )
 
         codeinfo.code_uuid = self.inputs.code.uuid
+        # set stdout as the name set for -o flag
         codeinfo.stdout_name = self.metadata.options.output_filename
         codeinfo.withmpi = self.inputs.metadata.options.withmpi
 
