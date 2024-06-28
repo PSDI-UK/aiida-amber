@@ -11,8 +11,7 @@ from aiida.orm import Dict
 
 # A subset of pdb4amber command line options
 cmdline_options = {
-    Required("o", default="stdout"): str,
-    # Required("out", default="stdout"): str,
+    Required("out", default="stdout"): str,
     Optional("y"): bool,
     Optional("nohyd"): bool,
     Optional("d"): bool,
@@ -37,7 +36,7 @@ cmdline_options = {
     Optional("logfile"): str,
     Optional("v"): bool,
     Optional("version"): bool,
-    Optional("leap-template"): str,
+    Optional("leap-template"): bool,
     Optional("no-conect"): str,
     Optional("noter"): str,
 }

@@ -43,15 +43,6 @@ class Pdb4amberParser(Parser):
         """
         # the directory for storing parsed output files
         output_dir = Path(self.node.get_option("output_dir"))
-        # Map output files to how they are named.
-        # outputs = ["stdout"]
-        # output_template = {
-        #     "o": "output_file",
-        # }
-
-        # for item, val in output_template.items():
-        #     if item in self.node.inputs.parameters.keys():
-        #         outputs.append(val)
 
         # Grab list of retrieved files.
         files_retrieved = self.retrieved.base.repository.list_object_names()

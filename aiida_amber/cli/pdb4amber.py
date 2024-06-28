@@ -17,29 +17,32 @@ from aiida_amber import helpers
 # from aiida_amber.utils import searchprevious
 
 
+extmap = {
+            '.pdb': 'PDB',
+            '.pqr': 'PQR',
+            '.cif': 'CIF',
+            '.pdbx': 'CIF',
+            '.parm7': 'AMBER',
+            '.prmtop': 'AMBER',
+            '.psf': 'PSF',
+            '.top': 'GROMACS',
+            '.gro': 'GRO',
+            '.field': 'FIELD',
+            '.config': 'CONFIG',
+            '.mol2': 'MOL2',
+            '.mol3': 'MOL3',
+            '.crd': 'CHARMMCRD',
+            '.rst7': 'RST7',
+            '.inpcrd': 'RST7',
+            '.restrt': 'RST7',
+            '.ncrst': 'NCRST',
+        }
+
+
 def launch(params):
     """Run pdb4amber.
 
     Uses helpers to add amber on localhost to AiiDA on the fly.
-
-    Possible output files:
-
-    if -o stdout and -l log.txt:
-
-    stdout_renum.txt
-    stdout_nonprot.pdb
-    stdout_water.pdb
-    stdout_sslink
-    leap.template.in
-    log.txt
-
-    if -o test.pdb:
-    test.pdb
-    test_nonprot.pdb
-    test_renum.txt
-    test_sslink
-    test_water.pdb
-    
     """
 
     # Prune unused CLI parameters from dict.
@@ -47,15 +50,14 @@ def launch(params):
 
     print(params)
     print()
-    print(params["o"])
-    # sys.exit()
+    print(params["out"])
 
     # dict to hold our calculation data.
     inputs = {
         "metadata": {
             "description": params.pop("description"),
             # "options": {
-            #     "output_filename": params["o"]} # need to set name of stdout 
+            #     "output_filename": params["out"]} # need to set name of stdout 
         },
     }
 
@@ -71,26 +73,61 @@ def launch(params):
         file=os.path.join(os.getcwd(), params.pop("in"))
     )
 
+
+    # correct the flags that should contain a dash "-" 
+    # rather than an underscore "_"
+    if "amber_compatible_residues" in params:
+        del params["amber_compatible_residues"]
+        params["amber-compatible-residues"] = True
+    if "most_populous" in params:
+        del params["most_populous"]
+        params["most-populous"] = True
+    if "keep_altlocs" in params:
+        del params["keep_altlocs"]
+        params["keep-altlocs"] = True
+    if "no_reduce_db" in params:
+        del params["no_reduce_db"]
+        params["no-reduce-db"] = True
+    if "add_missing_atoms" in params:
+        del params["add_missing_atoms"]
+        params["add-missing-atoms"] = True
+    if "leap_template" in params:
+        del params["leap_template"]
+        params["leap-template"] = True
+    if "no_conect" in params:
+        del params["no_conect"]
+        params["no-conect"] = True
+
     # get all possible output files from arguments provided
     # pdb4amber appends the prefix of filename defined in -o flag to some
     # outputted files
-    prefix = params["o"].split(".")[0]
+    prefix = params["out"].split(".")[0]
     output_filenames = [f"{prefix}_sslink", f"{prefix}_nonprot.pdb", f"{prefix}_renum.txt"]
+    # the out flag in pdb4amber expects a file type that is in a list of
+    # acceptible extensions, check these and make sure the file extension is 
+    # in the list.
+    if params["out"] != "stdout":
+        ext = params["out"].split(".")[1]
+        try:
+            if extmap[f".{ext}"]:
+                output_filenames.append(params["out"])
+        except:
+            msg = f'Could not determine file type of "{params["out"]}"'
+            raise ValueError(msg)
     if "dry" in params:
         water_file = f"{prefix}_water.pdb"
         output_filenames.append(water_file)
     if "leap-template" in params:
         output_filenames.append("leap.template.in")
     if "logfile" in params:
-        output_filenames.append(params.pop("log_file"))
+        output_filenames.append(params["logfile"])
     inputs["pdb4amber_outfiles"] = orm.List(output_filenames)
 
     Pdb4amberParameters = DataFactory("amber.pdb4amber")
     inputs["parameters"] = Pdb4amberParameters(params)
 
     print(inputs["parameters"].cmdline_params)
-    # sys.exit()
-
+    sys.exit()
     # need to search previous processes properly
     # check if inputs are outputs from prev processes
     # inputs = searchprevious.append_prev_nodes(inputs, inputs["input_list"])
@@ -121,7 +158,7 @@ def launch(params):
         type=str, 
         help="PDB input file (default: input.pdb)")  # file in
 # Required outputs
-@click.option("-o", 
+@click.option("-o", "--out", 
         default="stdout", 
         type=str, 
         help="PDB output file (default: stdout)")  # file out

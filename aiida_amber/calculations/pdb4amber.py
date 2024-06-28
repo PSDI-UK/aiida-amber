@@ -50,15 +50,7 @@ class Pdb4amberCalculation(CalcJob):
         spec.output('stdout', valid_type=SinglefileData, help='stdout')
         spec.output('output_file', valid_type=SinglefileData, help='outputted pdb file')
 
-        # optional outputs
-        # spec.output('sslink_file', valid_type=SinglefileData, help='sslink file')
-        # spec.output('renum_file', valid_type=SinglefileData, help='renum txt file')
-        # spec.output('nonprot_file', valid_type=SinglefileData, help='nonprot pdb file')
-        # spec.output('water_file', valid_type=SinglefileData, help='water pdb file')
-        # spec.output('reduce_logfile', valid_type=SinglefileData, help='reduce log file')
-        # spec.output('log_file', valid_type=SinglefileData, help='log file')
-        # spec.output('leap_template_file', valid_type=SinglefileData, help='leap template file')
-
+        # optional outputs are saved as a list
         # set the list of output file names as an input so that it can be
         # iterated over in the parser later.
         spec.input('pdb4amber_outfiles', valid_type=List, required=False,
@@ -91,7 +83,6 @@ class Pdb4amberCalculation(CalcJob):
             "input_file",
         ]
         # Any output files produced
-        output_options = ["o"]
         cmdline_input_files = {}
         input_files = []
         output_files = []
@@ -110,9 +101,9 @@ class Pdb4amberCalculation(CalcJob):
 
         # Add output files to retrieve list.
         output_files.append(self.metadata.options.output_filename)
-        for item in output_options:
-            if item in self.inputs.parameters:
-                output_files.append(self.inputs.parameters[item])
+        if "pdb4amber_outfiles" in self.inputs:  # check there are output files.
+            for name in self.inputs.pdb4amber_outfiles:
+                output_files.append(str(name))  # save output filename to list
 
         # Form the commandline.
         codeinfo.cmdline_params = self.inputs.parameters.cmdline_params(
