@@ -19,6 +19,7 @@ executables = {
     "amber": "sander",
     "tleap": "tleap",
     "antechamber": "antechamber",
+    "pdb4amber": "pdb4amber",
     "bash": "bash",
 }
 
