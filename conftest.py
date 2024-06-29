@@ -28,6 +28,12 @@ def antechamber_code(aiida_local_code_factory):
 
 
 @pytest.fixture(scope="function")
+def pdb4amber_code(aiida_local_code_factory):
+    """Get pdb4amber code."""
+    return aiida_local_code_factory(executable="pdb4amber", entry_point="amber")
+
+
+@pytest.fixture(scope="function")
 def bash_code(aiida_local_code_factory):
     """Get bash code."""
     return aiida_local_code_factory(executable="bash", entry_point="amber")

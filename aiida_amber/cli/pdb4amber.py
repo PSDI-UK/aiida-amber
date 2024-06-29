@@ -127,7 +127,6 @@ def launch(params):
     inputs["parameters"] = Pdb4amberParameters(params)
 
     print(inputs["parameters"].cmdline_params)
-    sys.exit()
     # need to search previous processes properly
     # check if inputs are outputs from prev processes
     # inputs = searchprevious.append_prev_nodes(inputs, inputs["input_list"])
@@ -174,17 +173,17 @@ def launch(params):
     is_flag=True,
     help="write a leap template for easy adaption (EXPERIMENTAL)", #file out
 )
+@click.option(
+     "-d", "--dry",
+    is_flag=True,
+    help="remove all water molecules (default: no)", # file out
+)
 
 # other parameters
 @click.option(
     "-y", "--nohyd", 
     is_flag=True,
     help="remove all hydrogen atoms (default: no)",
-)
-@click.option(
-     "-d", "--dry",
-    is_flag=True,
-    help="remove all water molecules (default: no)", # file out
 )
 @click.option(
     "-s", "--strip", 
