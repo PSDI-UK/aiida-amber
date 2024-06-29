@@ -56,8 +56,6 @@ def launch(params):
     inputs = {
         "metadata": {
             "description": params.pop("description"),
-            # "options": {
-            #     "output_filename": params["out"]} # need to set name of stdout 
         },
     }
 

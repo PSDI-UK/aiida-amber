@@ -109,7 +109,6 @@ class Pdb4amberParameters(Dict):  # pylint: disable=too-many-ancestors
 
 
         return [str(p) for p in parameters]
-        # return parameters
 
     def __str__(self):
         """String representation of node.
