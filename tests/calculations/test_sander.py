@@ -25,9 +25,15 @@ def run_sander(amber_code):
     )
 
     SinglefileData = DataFactory("core.singlefile")
-    mdin = SinglefileData(file=os.path.join(TEST_DIR, "input_files", "01_Min.in"))
-    prmtop = SinglefileData(file=os.path.join(TEST_DIR, "input_files", "parm7"))
-    inpcrd = SinglefileData(file=os.path.join(TEST_DIR, "input_files", "rst7"))
+    mdin = SinglefileData(
+        file=os.path.join(TEST_DIR, "input_files", "sander", "01_Min.in")
+    )
+    prmtop = SinglefileData(
+        file=os.path.join(TEST_DIR, "input_files", "sander", "parm7")
+    )
+    inpcrd = SinglefileData(
+        file=os.path.join(TEST_DIR, "input_files", "sander", "rst7")
+    )
 
     # set up calculation
     inputs = {

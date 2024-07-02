@@ -48,10 +48,6 @@ def launch(params):
     # Prune unused CLI parameters from dict.
     params = {k: v for k, v in params.items() if v not in [None, False]}
 
-    print(params)
-    print()
-    print(params["out"])
-
     # dict to hold our calculation data.
     inputs = {
         "metadata": {
@@ -124,7 +120,6 @@ def launch(params):
     Pdb4amberParameters = DataFactory("amber.pdb4amber")
     inputs["parameters"] = Pdb4amberParameters(params)
 
-    print(inputs["parameters"].cmdline_params)
     # need to search previous processes properly
     # check if inputs are outputs from prev processes
     # inputs = searchprevious.append_prev_nodes(inputs, inputs["input_list"])
