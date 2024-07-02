@@ -58,7 +58,7 @@ jobs:
         pip install --upgrade pip
         pip install -e .[docs]
     - name: Build docs
-      run: cd docs && make
+      run: cd docs && make clean && make html
 
   pre-commit:
     runs-on: ubuntu-latest
