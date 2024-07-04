@@ -203,7 +203,7 @@ htmlhelp_basename = "aiida-amber-doc"
 # We should ignore any python built-in exception, for instance
 nitpick_ignore = [
     ("py:class", "Logger"),
-    ("py:class", "type"),
+    ("py:class", "QbFields"),
 ]
 
 
