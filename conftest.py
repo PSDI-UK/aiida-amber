@@ -34,6 +34,12 @@ def pdb4amber_code(aiida_local_code_factory):
 
 
 @pytest.fixture(scope="function")
+def parmed_code(aiida_local_code_factory):
+    """Get parmed code."""
+    return aiida_local_code_factory(executable="parmed", entry_point="amber")
+
+
+@pytest.fixture(scope="function")
 def bash_code(aiida_local_code_factory):
     """Get bash code."""
     return aiida_local_code_factory(executable="bash", entry_point="amber")
