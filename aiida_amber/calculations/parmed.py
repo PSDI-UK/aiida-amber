@@ -88,11 +88,11 @@ class ParmedCalculation(CalcJob):
 
         # Setup data structures for files.
         input_options = [
-            "parmed_script",
-            "prmtop_files",
-            "inpcrd_files",
-            "parmed_inpfiles",
-            "parmed_dirs",
+            "parmed_script",  # input script from -i flag
+            "prmtop_files",  # prmtop files from -p flag
+            "inpcrd_files",  # inpcrd files from -c flag
+            "parmed_inpfiles",  # input files found from parmed_script file
+            "parmed_dirs",  # input dirs found from parmed_script file
         ]
         output_options = []
         cmdline_input_files = {}
