@@ -39,7 +39,7 @@ jobs:
 
     - name: Run test suite
       shell: bash
-      run: pytest --cov aiida_amber --cov-report term-missing --cov-append .
+      run: pytest -s --cov aiida_amber --cov-report term-missing --cov-append .
 
     - name: Report Coverage
       uses: coverallsapp/github-action@v2
