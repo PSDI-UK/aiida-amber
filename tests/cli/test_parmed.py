@@ -38,8 +38,8 @@ def test_launch_parmed():
             [
                 "verdi",
                 "process",
-                "list",
-                "-a",
+                "report",
+                "142",
             ]
         )
     )
