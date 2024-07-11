@@ -30,6 +30,20 @@ def test_launch_parmed():
             inpcrd_in,
         ]
     )
+
+    print(">>> CHECK FOR ERRORS")
+    # check for errors
+    print(
+        subprocess.check_output(
+            [
+                "verdi",
+                "process",
+                "report",
+                "8",
+            ]
+        )
+    )
+
     # append run process to qb
     # pylint: disable=unused-variable
     qb = searchprevious.build_query()
