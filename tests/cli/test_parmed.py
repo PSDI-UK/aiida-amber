@@ -31,19 +31,6 @@ def test_launch_parmed():
         ]
     )
 
-    print(">>> CHECK FOR ERRORS")
-    # check for errors
-    print(
-        subprocess.check_output(
-            [
-                "verdi",
-                "process",
-                "report",
-                "142",
-            ]
-        )
-    )
-
     # append run process to qb
     # pylint: disable=unused-variable
     qb = searchprevious.build_query()

@@ -16,9 +16,7 @@ jobs:
                     2024-06-24-aiida2.5.0-py3.11.0,
                     2024-06-24-aiida2.5.1-py3.11.0,
                     2024-06-24-aiida2.5.2-py3.11.0]
-        amber: [ #23.3=py311h9fea076_4,
-                    23.6=nompi_py311he003265_102
-                    ]
+        amber: [23.6=nompi_py311he003265_102]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
