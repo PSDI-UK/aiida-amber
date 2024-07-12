@@ -11,7 +11,8 @@ jobs:
     strategy:
       matrix:
         container: [
-                    2024-06-24-aiida2.4.0-py3.11.0-amber22
+                    2024-06-24-aiida2.4.0-py3.11.0-amber22-1,
+                    # 2024-06-24-aiida2.4.0-py3.11.0-amber22,
                     # 2024-06-24-aiida2.4.0-py3.11.0,
                     # 2024-06-24-aiida2.4.1-py3.11.0,
                     # 2024-06-24-aiida2.4.2-py3.11.0,
@@ -32,9 +33,9 @@ jobs:
     #   shell: bash
     #   run: mamba install ambertools=${{ matrix.amber }} -c conda-forge -yq
 
-    - name: Source amber.sh for executable
-      shell: bash
-      run: source /opt/amber22/amber.sh
+    # - name: Source amber.sh for executable
+    #   shell: bash
+    #   run: source /opt/amber22/amber.sh
 
     - name: Start AiiDA with a test profile
       shell: bash
