@@ -32,6 +32,10 @@ jobs:
     #   shell: bash
     #   run: mamba install ambertools=${{ matrix.amber }} -c conda-forge -yq
 
+    - name: Source amber.sh for executable
+      shell: bash
+      run: source /opt/amber22/amber.sh
+
     - name: Start AiiDA with a test profile
       shell: bash
       run: /home/aiida/aiida-start
