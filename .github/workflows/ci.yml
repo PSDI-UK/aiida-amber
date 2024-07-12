@@ -10,13 +10,16 @@ jobs:
   tests:
     strategy:
       matrix:
-        container: [2024-06-24-aiida2.4.0-py3.11.0,
-                    2024-06-24-aiida2.4.1-py3.11.0,
-                    2024-06-24-aiida2.4.2-py3.11.0,
-                    2024-06-24-aiida2.5.0-py3.11.0,
-                    2024-06-24-aiida2.5.1-py3.11.0,
-                    2024-06-24-aiida2.5.2-py3.11.0]
-        amber: [23.6=nompi_py311he003265_102]
+        container: [
+                    2024-06-24-aiida2.4.0-py3.11.0-amber22
+                    # 2024-06-24-aiida2.4.0-py3.11.0,
+                    # 2024-06-24-aiida2.4.1-py3.11.0,
+                    # 2024-06-24-aiida2.4.2-py3.11.0,
+                    # 2024-06-24-aiida2.5.0-py3.11.0,
+                    # 2024-06-24-aiida2.5.1-py3.11.0,
+                    # 2024-06-24-aiida2.5.2-py3.11.0
+                    ]
+        # amber: [23.6=nompi_py311he003265_102]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
@@ -25,9 +28,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: install AmberTools
-      shell: bash
-      run: mamba install ambertools=${{ matrix.amber }} -c conda-forge -yq
+    # - name: install AmberTools
+    #   shell: bash
+    #   run: mamba install ambertools=${{ matrix.amber }} -c conda-forge -yq
 
     - name: Start AiiDA with a test profile
       shell: bash
