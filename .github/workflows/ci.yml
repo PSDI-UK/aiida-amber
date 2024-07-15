@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         container: [
-                    2024-06-24-aiida2.4.0-py3.11.0-amber23,
+                    2024-06-24-aiida2.4.0-py3.11.0-amber23-1,
                     # 2024-06-24-aiida2.4.0-py3.11.0-amber22-1,
                     # 2024-06-24-aiida2.4.0-py3.11.0-amber22,
                     # 2024-06-24-aiida2.4.0-py3.11.0,
