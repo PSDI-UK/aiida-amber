@@ -34,9 +34,9 @@ jobs:
     #   shell: bash
     #   run: mamba install ambertools=${{ matrix.amber }} -c conda-forge -yq
 
-    # - name: Source amber.sh for executable
-    #  shell: bash
-    #  run: source /opt/amber24/amber.sh
+    - name: Source bashrc for proper env
+      shell: bash
+      run: source ~/.bashrc
 
     - name: Start AiiDA with a test profile
       shell: bash
@@ -47,7 +47,7 @@ jobs:
       run: pip install -e .[testing]
 
     - name: Run test suite
-      shell: bash -ileo pipefail {0}
+      shell: bash
       run: pytest -s --cov aiida_amber --cov-report term-missing --cov-append .
 
     - name: Report Coverage
