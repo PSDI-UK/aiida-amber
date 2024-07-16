@@ -30,9 +30,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # - name: install AmberTools
-    #   shell: bash
-    #   run: mamba install ambertools=${{ matrix.amber }} -c conda-forge -yq
+    - name: re-establish missing symlink
+      shell: bash
+      run: ln -s /home/aiida /github/home
 
     - name: Source bashrc for proper env
       shell: bash
