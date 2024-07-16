@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         container: [
-                    2024-06-24-aiida2.4.0-py3.11.0-amber24-4,
+                    2024-06-24-aiida2.4.0-py3.11.0-amber24-7,
                     # 2024-06-24-aiida2.4.0-py3.11.0-amber22-1,
                     # 2024-06-24-aiida2.4.0-py3.11.0-amber22,
                     # 2024-06-24-aiida2.4.0-py3.11.0,
@@ -30,13 +30,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: re-establish missing symlink
-      shell: bash
-      run: ln -s /home/aiida /github/home
+    #- name: re-establish missing symlink
+    #  shell: bash
+    #  run: ln -s /home/aiida /github/home
 
-    - name: Source bashrc for proper env
-      shell: bash
-      run: source /home/aiida/.bashrc
+    #- name: Source bashrc for proper env
+    #  shell: bash
+    #  run: source /home/aiida/.bashrc
 
     - name: Start AiiDA with a test profile
       shell: bash
