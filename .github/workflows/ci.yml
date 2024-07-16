@@ -47,7 +47,7 @@ jobs:
       run: pip install -e .[testing]
 
     - name: Run test suite
-      shell: bash -leo pipefail {0}
+      shell: bash -ileo pipefail {0}
       run: pytest -s --cov aiida_amber --cov-report term-missing --cov-append .
 
     - name: Report Coverage
