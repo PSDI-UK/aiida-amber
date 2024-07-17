@@ -10,33 +10,20 @@ jobs:
   tests:
     strategy:
       matrix:
-        container: [
-                    2024-06-24-aiida2.4.0-py3.11.0-amber24-7,
-                    # 2024-06-24-aiida2.4.0-py3.11.0-amber22-1,
-                    # 2024-06-24-aiida2.4.0-py3.11.0-amber22,
-                    # 2024-06-24-aiida2.4.0-py3.11.0,
-                    # 2024-06-24-aiida2.4.1-py3.11.0,
-                    # 2024-06-24-aiida2.4.2-py3.11.0,
-                    # 2024-06-24-aiida2.5.0-py3.11.0,
-                    # 2024-06-24-aiida2.5.1-py3.11.0,
-                    # 2024-06-24-aiida2.5.2-py3.11.0
-                    ]
-        # amber: [23.6=nompi_py311he003265_102]
+        container: [2024-07-17-aiida2.4.0-py3.11.0-amber24,
+                    2024-07-17-aiida2.4.1-py3.11.0-amber24,
+                    2024-07-17-aiida2.4.2-py3.11.0-amber24,
+                    2024-07-17-aiida2.5.0-py3.11.0-amber24,
+                    2024-07-17-aiida2.5.1-py3.11.0-amber24,
+                    2024-07-17-aiida2.5.2-py3.11.0-amber24,
+                    2024-07-17-aiida2.6.1-py3.11.0-amber24]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
         image: harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:${{ matrix.container }}
-    name: ${{ matrix.container }}-amber${{ matrix.amber }}
+    name: ${{ matrix.container }}
     steps:
     - uses: actions/checkout@v4
-
-    #- name: re-establish missing symlink
-    #  shell: bash
-    #  run: ln -s /home/aiida /github/home
-
-    #- name: Source bashrc for proper env
-    #  shell: bash
-    #  run: source /home/aiida/.bashrc
 
     - name: Start AiiDA with a test profile
       shell: bash
