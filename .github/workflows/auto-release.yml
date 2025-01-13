@@ -73,7 +73,7 @@ jobs:
 
   release:
     name: Create GH release.
-    needs: tag
+    needs: [version, tag]
     runs-on: ubuntu-latest
     env:
       RELEASE_TAG: ${{ needs.version.outputs.release-tag }}
