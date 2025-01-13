@@ -41,7 +41,7 @@ jobs:
     - name: Get latest release from pip
       id: latestreleased
       run: |
-        PREVIOUS_VERSION=$(python -m pip install --upgrade aiida-amber== 2>&1 | grep "from versions:" | sed "s/^.*from versions: \(.*\))/\1/" | awk -F ", " '{print $NF}')
+        PREVIOUS_VERSION=$(python -m pip index versions aiida-amber | grep "aiida-amber" | cut -d "(" -f2 | cut -d ")" -f1)
         echo "pip_tag=$PREVIOUS_VERSION" >> "$GITHUB_OUTPUT"
         echo $PREVIOUS_VERSION
 
