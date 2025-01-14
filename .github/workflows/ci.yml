@@ -10,24 +10,22 @@ jobs:
   tests:
     strategy:
       matrix:
-        container: [2024-07-17-aiida2.4.0-py3.11.0-amber23,
-                    2024-07-17-aiida2.4.1-py3.11.0-amber23,
-                    2024-07-17-aiida2.4.2-py3.11.0-amber23,
-                    2024-07-17-aiida2.5.0-py3.11.0-amber23,
-                    2024-07-17-aiida2.5.1-py3.11.0-amber23,
-                    2024-07-17-aiida2.5.2-py3.11.0-amber23,
-                    2024-07-17-aiida2.6.1-py3.11.0-amber23,
-                    2024-07-17-aiida2.4.0-py3.11.0-amber24,
-                    2024-07-17-aiida2.4.1-py3.11.0-amber24,
-                    2024-07-17-aiida2.4.2-py3.11.0-amber24,
-                    2024-07-17-aiida2.5.0-py3.11.0-amber24,
-                    2024-07-17-aiida2.5.1-py3.11.0-amber24,
-                    2024-07-17-aiida2.5.2-py3.11.0-amber24,
-                    2024-07-17-aiida2.6.1-py3.11.0-amber24]
+        container: [2025-01-14-aiida2.5.0-py3.11.0-amber23,
+                    2025-01-14-aiida2.5.1-py3.11.0-amber23,
+                    2025-01-14-aiida2.5.2-py3.11.0-amber23,
+                    2025-01-14-aiida2.6.1-py3.11.0-amber23,
+                    2025-01-14-aiida2.6.2-py3.11.0-amber23,
+                    2025-01-14-aiida2.6.3-py3.11.0-amber23,
+                    2025-01-14-aiida2.5.0-py3.11.0-amber24,
+                    2025-01-14-aiida2.5.1-py3.11.0-amber24,
+                    2025-01-14-aiida2.5.2-py3.11.0-amber24,
+                    2025-01-14-aiida2.6.1-py3.11.0-amber24,
+                    2025-01-14-aiida2.6.2-py3.11.0-amber24,
+                    2025-01-14-aiida2.6.3-py3.11.0-amber24]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     container:
-        image: harbor.stfc.ac.uk/biosimulation-cloud/aiida-testbase:${{ matrix.container }}
+        image: harbor.stfc.ac.uk/psdi-pathfinder4/aiida-testbase:${{ matrix.container }}
     name: ${{ matrix.container }}
     steps:
     - uses: actions/checkout@v4
