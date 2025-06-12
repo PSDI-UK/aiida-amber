@@ -59,6 +59,7 @@ aiida_tleap = "aiida_amber.cli.tleap:cli"
 aiida_antechamber = "aiida_amber.cli.antechamber:cli"
 aiida_pdb4amber = "aiida_amber.cli.pdb4amber:cli"
 aiida_parmed = "aiida_amber.cli.parmed:cli"
+aiida_cpptraj = "aiida_amber.cli.cpptraj:cli"
 
 [project.entry-points."aiida.data"]
 "amber.sander" = "aiida_amber.data.sander:SanderParameters"
