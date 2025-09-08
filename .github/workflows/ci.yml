@@ -13,13 +13,13 @@ jobs:
         container: [2025-02-10-aiida2.6.1-py3.11.0-amber24,
                     2025-02-10-aiida2.6.2-py3.11.0-amber24,
                     2025-02-10-aiida2.6.3-py3.11.0-amber24]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     container:
         image: harbor.stfc.ac.uk/psdi-pathfinder4/aiida-testbase:${{ matrix.container }}
     name: ${{ matrix.container }}
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v5.0.0
 
     - name: Start AiiDA with a test profile
       shell: bash
@@ -34,37 +34,43 @@ jobs:
       run: pytest -s --cov aiida_amber --cov-report term-missing --cov-append .
 
     - name: Report Coverage
-      uses: coverallsapp/github-action@v2
+      uses: coverallsapp/github-action@v2.3.6
 
   docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v5
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v6
+    - uses: actions/checkout@v5.0.0
+
+    - name: Set up Python 3.13
+      uses: actions/setup-python@v6.0.0
       with:
-        python-version: 3.11
+        python-version: 3.13
+
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
         pip install -e .[docs]
+
     - name: Build docs
       run: cd docs && make
 
   pre-commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v5
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v6
+    - uses: actions/checkout@v5.0.0
+
+    - name: Set up Python 3.13
+      uses: actions/setup-python@v6.0.0
       with:
-        python-version: 3.11
+        python-version: 3.13
+
     - name: Install python dependencies
       run: |
         pip install --upgrade pip
         pip install -e .[pre-commit,docs,testing]
+
     - name: Run pre-commit
       run: |
         pre-commit install
